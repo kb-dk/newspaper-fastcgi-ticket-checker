@@ -1,0 +1,162 @@
+{"id":"dcf8246d-8097-4e84-9e8c-eb4a37858115","type":"Stream","ipAddress":"172.18.229.232","resources":["doms_radioTVCollection:uuid:853a0b31-c944-44a5-8e42-bc9b5bc697be","doms_radioTVCollection:uuid:0c6a18b8-a3c4-4dfc-9ece-1d7c8ffc908c","doms_radioTVCollection:uuid:8eaca37b-c3a9-4afd-b8ed-9f7f86d5e82d"],"userAttributes":{"SBIPRoleMapper":["inhouse"]},"properties":null}CONTEXT_DOCUMENT_ROOT = /var/www/html
+CONTEXT_PREFIX = 
+DOCUMENT_ROOT = /var/www/html
+FCGI_APACHE_ROLE = ACCESS_CHECKER
+FCGI_ROLE = AUTHORIZER
+GATEWAY_INTERFACE = CGI/1.1
+HTTP_ACCEPT = text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+HTTP_ACCEPT_ENCODING = gzip, deflate
+HTTP_ACCEPT_LANGUAGE = en-US,en;q=0.5
+HTTP_CACHE_CONTROL = max-age=0
+HTTP_CONNECTION = close
+HTTP_HOST = localhost
+HTTP_USER_AGENT = Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:33.0) Gecko/20100101 Firefox/33.0
+PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+QUERY_STRING = ticket=dcf8246d-8097-4e84-9e8c-eb4a37858115
+REMOTE_ADDR = ::1
+REMOTE_PORT = 58511
+REQUEST_METHOD = GET
+REQUEST_SCHEME = http
+REQUEST_URI = /?ticket=dcf8246d-8097-4e84-9e8c-eb4a37858115
+SCRIPT_FILENAME = /var/www/html/
+SERVER_ADDR = ::1
+SERVER_ADMIN = webmaster@localhost
+SERVER_NAME = localhost
+SERVER_PORT = 80
+SERVER_PROTOCOL = HTTP/1.1
+SERVER_SIGNATURE = <address>Apache/2.4.10 (Ubuntu) Server at localhost Port 80</address>
+
+SERVER_SOFTWARE = Apache/2.4.10 (Ubuntu)
+{"id":"dcf8246d-8097-4e84-9e8c-eb4a37858115","type":"Stream","ipAddress":"172.18.229.232","resources":["doms_radioTVCollection:uuid:853a0b31-c944-44a5-8e42-bc9b5bc697be","doms_radioTVCollection:uuid:0c6a18b8-a3c4-4dfc-9ece-1d7c8ffc908c","doms_radioTVCollection:uuid:8eaca37b-c3a9-4afd-b8ed-9f7f86d5e82d"],"userAttributes":{"SBIPRoleMapper":["inhouse"]},"properties":null}CONTEXT_DOCUMENT_ROOT = /var/www/html
+CONTEXT_PREFIX = 
+DOCUMENT_ROOT = /var/www/html
+FCGI_APACHE_ROLE = ACCESS_CHECKER
+FCGI_ROLE = AUTHORIZER
+GATEWAY_INTERFACE = CGI/1.1
+HTTP_ACCEPT = text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+HTTP_ACCEPT_ENCODING = gzip, deflate
+HTTP_ACCEPT_LANGUAGE = en-US,en;q=0.5
+HTTP_CACHE_CONTROL = max-age=0
+HTTP_CONNECTION = close
+HTTP_HOST = localhost
+HTTP_IF_MODIFIED_SINCE = Mon, 27 Oct 2014 14:17:59 GMT
+HTTP_IF_NONE_MATCH = "2c39-5066832a59073-gzip"
+HTTP_USER_AGENT = Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:33.0) Gecko/20100101 Firefox/33.0
+PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+QUERY_STRING = ticket=dcf8246d-8097-4e84-9e8c-eb4a37858115
+REMOTE_ADDR = ::1
+REMOTE_PORT = 58513
+REQUEST_METHOD = GET
+REQUEST_SCHEME = http
+REQUEST_URI = /?ticket=dcf8246d-8097-4e84-9e8c-eb4a37858115
+SCRIPT_FILENAME = /var/www/html/
+SERVER_ADDR = ::1
+SERVER_ADMIN = webmaster@localhost
+SERVER_NAME = localhost
+SERVER_PORT = 80
+SERVER_PROTOCOL = HTTP/1.1
+SERVER_SIGNATURE = <address>Apache/2.4.10 (Ubuntu) Server at localhost Port 80</address>
+
+SERVER_SOFTWARE = Apache/2.4.10 (Ubuntu)
+{"id":"dcf8246d-8097-4e84-9e8c-eb4a37858115","type":"Stream","ipAddress":"172.18.229.232","resources":["doms_radioTVCollection:uuid:853a0b31-c944-44a5-8e42-bc9b5bc697be","doms_radioTVCollection:uuid:0c6a18b8-a3c4-4dfc-9ece-1d7c8ffc908c","doms_radioTVCollection:uuid:8eaca37b-c3a9-4afd-b8ed-9f7f86d5e82d"],"userAttributes":{"SBIPRoleMapper":["inhouse"]},"properties":null}CONTEXT_DOCUMENT_ROOT = /var/www/html
+CONTEXT_PREFIX = 
+DOCUMENT_ROOT = /var/www/html
+FCGI_APACHE_ROLE = ACCESS_CHECKER
+FCGI_ROLE = AUTHORIZER
+GATEWAY_INTERFACE = CGI/1.1
+HTTP_ACCEPT = text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+HTTP_ACCEPT_ENCODING = gzip, deflate
+HTTP_ACCEPT_LANGUAGE = en-US,en;q=0.5
+HTTP_CACHE_CONTROL = max-age=0
+HTTP_CONNECTION = close
+HTTP_HOST = localhost
+HTTP_IF_MODIFIED_SINCE = Mon, 27 Oct 2014 14:17:59 GMT
+HTTP_IF_NONE_MATCH = "2c39-5066832a59073-gzip"
+HTTP_USER_AGENT = Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:33.0) Gecko/20100101 Firefox/33.0
+PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+QUERY_STRING = ticket=dcf8246d-8097-4e84-9e8c-eb4a37858115
+REMOTE_ADDR = ::1
+REMOTE_PORT = 58513
+REQUEST_METHOD = GET
+REQUEST_SCHEME = http
+REQUEST_URI = /?ticket=dcf8246d-8097-4e84-9e8c-eb4a37858115
+SCRIPT_FILENAME = /var/www/html/
+SERVER_ADDR = ::1
+SERVER_ADMIN = webmaster@localhost
+SERVER_NAME = localhost
+SERVER_PORT = 80
+SERVER_PROTOCOL = HTTP/1.1
+SERVER_SIGNATURE = <address>Apache/2.4.10 (Ubuntu) Server at localhost Port 80</address>
+
+SERVER_SOFTWARE = Apache/2.4.10 (Ubuntu)
+{"id":"dcf8246d-8097-4e84-9e8c-eb4a37858115","type":"Stream","ipAddress":"172.18.229.232","resources":["doms_radioTVCollection:uuid:853a0b31-c944-44a5-8e42-bc9b5bc697be","doms_radioTVCollection:uuid:0c6a18b8-a3c4-4dfc-9ece-1d7c8ffc908c","doms_radioTVCollection:uuid:8eaca37b-c3a9-4afd-b8ed-9f7f86d5e82d"],"userAttributes":{"SBIPRoleMapper":["inhouse"]},"properties":null}CONTEXT_DOCUMENT_ROOT = /var/www/html
+CONTEXT_PREFIX = 
+DOCUMENT_ROOT = /var/www/html
+FCGI_APACHE_ROLE = ACCESS_CHECKER
+FCGI_ROLE = AUTHORIZER
+GATEWAY_INTERFACE = CGI/1.1
+HTTP_ACCEPT = text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+HTTP_ACCEPT_ENCODING = gzip, deflate
+HTTP_ACCEPT_LANGUAGE = en-US,en;q=0.5
+HTTP_CONNECTION = close
+HTTP_HOST = localhost
+HTTP_IF_MODIFIED_SINCE = Mon, 27 Oct 2014 14:17:59 GMT
+HTTP_IF_NONE_MATCH = "2c39-5066832a59073-gzip"
+HTTP_USER_AGENT = Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:33.0) Gecko/20100101 Firefox/33.0
+PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+QUERY_STRING = ticket=dcf8246d-8097-4e84-9e8c-eb4a37858115
+REMOTE_ADDR = ::1
+REMOTE_PORT = 58513
+REQUEST_METHOD = GET
+REQUEST_SCHEME = http
+REQUEST_URI = /?ticket=dcf8246d-8097-4e84-9e8c-eb4a37858115
+SCRIPT_FILENAME = /var/www/html/
+SERVER_ADDR = ::1
+SERVER_ADMIN = webmaster@localhost
+SERVER_NAME = localhost
+SERVER_PORT = 80
+SERVER_PROTOCOL = HTTP/1.1
+SERVER_SIGNATURE = <address>Apache/2.4.10 (Ubuntu) Server at localhost Port 80</address>
+
+SERVER_SOFTWARE = Apache/2.4.10 (Ubuntu)
+{"id":"dcf8246d-8097-4e84-9e8c-eb4a37858115","type":"Stream","ipAddress":"172.18.229.232","resources":["doms_radioTVCollection:uuid:853a0b31-c944-44a5-8e42-bc9b5bc697be","doms_radioTVCollection:uuid:0c6a18b8-a3c4-4dfc-9ece-1d7c8ffc908c","doms_radioTVCollection:uuid:8eaca37b-c3a9-4afd-b8ed-9f7f86d5e82d"],"userAttributes":{"SBIPRoleMapper":["inhouse"]},"properties":null}CONTEXT_DOCUMENT_ROOT = /var/www/html
+CONTEXT_PREFIX = 
+DOCUMENT_ROOT = /var/www/html
+FCGI_APACHE_ROLE = ACCESS_CHECKER
+FCGI_ROLE = AUTHORIZER
+GATEWAY_INTERFACE = CGI/1.1
+HTTP_ACCEPT = text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+HTTP_ACCEPT_ENCODING = gzip, deflate
+HTTP_ACCEPT_LANGUAGE = en-US,en;q=0.5
+HTTP_CACHE_CONTROL = max-age=0
+HTTP_CONNECTION = close
+HTTP_HOST = localhost
+HTTP_IF_MODIFIED_SINCE = Mon, 27 Oct 2014 14:17:59 GMT
+HTTP_IF_NONE_MATCH = "2c39-5066832a59073-gzip"
+HTTP_USER_AGENT = Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:33.0) Gecko/20100101 Firefox/33.0
+PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+QUERY_STRING = ticket=dcf8246d-8097-4e84-9e8c-eb4a37858115
+REMOTE_ADDR = ::1
+REMOTE_PORT = 58513
+REQUEST_METHOD = GET
+REQUEST_SCHEME = http
+REQUEST_URI = /?ticket=dcf8246d-8097-4e84-9e8c-eb4a37858115
+SCRIPT_FILENAME = /var/www/html/
+SERVER_ADDR = ::1
+SERVER_ADMIN = webmaster@localhost
+SERVER_NAME = localhost
+SERVER_PORT = 80
+SERVER_PROTOCOL = HTTP/1.1
+SERVER_SIGNATURE = <address>Apache/2.4.10 (Ubuntu) Server at localhost Port 80</address>
+
+SERVER_SOFTWARE = Apache/2.4.10 (Ubuntu)
+{"id":"dcf8246d-8097-4e84-9e8c-eb4a37858115","type":"Stream","ipAddress":"172.18.229.232","resources":["doms_radioTVCollection:uuid:853a0b31-c944-44a5-8e42-bc9b5bc697be","doms_radioTVCollection:uuid:0c6a18b8-a3c4-4dfc-9ece-1d7c8ffc908c","doms_radioTVCollection:uuid:8eaca37b-c3a9-4afd-b8ed-9f7f86d5e82d"],"userAttributes":{"SBIPRoleMapper":["inhouse"]},"properties":null}CONTEXT_DOCUMENT_ROOT = /var/www/html
+CONTEXT_PREFIX = 
+DOCUMENT_ROOT = /var/www/html
+FCGI_APACHE_ROLE = ACCESS_CHECKER
+FCGI_ROLE = AUTHORIZER
+GATEWAY_INTERFACE = CGI/1.1
+HTTP_ACCEPT = text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+HTTP_ACCEPT_ENCODING = gzip, deflate
+HTTP_ACCEPT_LANGUAGE = en-US,en;q=0.5
+HTTP_CACHE_CONTROL = max-age=0
