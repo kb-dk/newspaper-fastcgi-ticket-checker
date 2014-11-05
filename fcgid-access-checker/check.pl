@@ -1,13 +1,13 @@
 #!/usr/bin/perl
 
 use warnings;
-use strict; # gives error with $cfg->...
+use strict; 
 use diagnostics;
 
 use CGI::Fast;
 use Cache::Memcached;
 use CheckTicket;
-use Config::Simple
+use Config::Simple;
 use IO::Handle;
 use JSON;
 
@@ -19,6 +19,7 @@ my $cfg = new Config::Simple("../fcgid-access-checker.ini");
 
 my $memcached_server = $cfg->param("memcached.server") or die "no memcached.server";
 my $resource_type = $cfg->param("doms.resource_type") or die "no doms.resource_type";
+my $url_pattern = $cfg->param("doms.url_pattern") or die "no doms.url_pattern";
 
 #
 
@@ -29,37 +30,27 @@ my $memd = new Cache::Memcached {
 
 my $json = JSON->new->allow_nonref;
 
+my $url_regexp = qr/$url_pattern/;  # prepared regexp
+
 ### -- go
 
 while (my $q = CGI::Fast->new) {
-   	my $ticket_id = $q->param("ticket");
-        my $remote_ip = $q->remote_addr();
-        my $request_url = $q->url();
+    my $ticket_id = $q->param("ticket");
+    my $remote_ip = $q->remote_addr();
+    my $request_url = $q->url();
 
-        my $requested_resources = $request_url =~ $resource_pattern;
-	my $status = "unset";
+    my $status;
 
-        if (!defined $remote_ip) {
+    if ($request_url =~ /$url_regexp/) {
 
-	    $status = "500";
+        my $requested_resources = $1;
 
-	} elsif (!defined $request_url) {
+	my $ticket_content = $memd -> get($ticket_id);
 
-	    $status = "500";
-	    
-        } elsif (defined $ticket_id) {
+	$status = CheckTicket::returnStatusCodeFor($json, $ticket_content, $remote_ip, $requested_resources, $resource_type);
+    } else {
+	$status = "200";
+    }
 
-	    my $ticket_content = $memd -> get($ticket_id);
-
-	    if (defined $ticket_content) {
-		$status = CheckTicket::returnStatusCodeFor($json, $ticket_content, $remote_ip, $requested_resources, $resource_type);
-	    } else {
-		$status = "404";
-	    }
-	    
-	} else {
-	    $status = "400"; # why?
-	}
-
-	print("Status: $status\n\n");
+    print("Status: $status\n\n");
 }
