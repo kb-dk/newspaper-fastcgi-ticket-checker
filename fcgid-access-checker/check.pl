@@ -1,15 +1,15 @@
 #!/usr/bin/perl
 
 use warnings;
-#use strict; # gives error with $cfg->...
+use strict; # gives error with $cfg->...
 use diagnostics;
 
 use CGI::Fast;
 use Cache::Memcached;
-use IO::Handle;
-use JSON;
 use CheckTicket;
 use Config::Simple
+use IO::Handle;
+use JSON;
 
 ### -- configuration start
 
@@ -19,8 +19,6 @@ my $cfg = new Config::Simple("../fcgid-access-checker.ini");
 
 my $memcached_server = $cfg->param("memcached.server") or die "no memcached.server";
 my $resource_type = $cfg->param("doms.resource_type") or die "no doms.resource_type";
-#my $resource_pattern = $cfg->param("doms.resource_pattern") or "die no doms.resource_pattern";
-
 
 #
 

@@ -66,7 +66,7 @@ sub returnStatusCodeFor {
 	return "500"; # bad memcached entry
     }
     
-    if (!$remote_ip eq $json_ticket_ipaddress) {
+    if (!($remote_ip eq $json_ticket_ipaddress)) {
 	return "403"; # different IP-number
     }
     
@@ -76,14 +76,18 @@ sub returnStatusCodeFor {
     my @resources = @$resource_scalar;
 
     if (@resources) {
+
 	# look at each resource to extract uuids.
 	# doms_radioTVCollection:uuid:853a0b31-c944-44a5-8e42-bc9b5bc697be
 	my $found = (1 == 0);
 	
+	# NOTE: Possible bottleneck because we need to do string
+	# manipulation of the resources array to verify credentials.
+	# A simpler string match would most likely be faster.
+	
 	for my $resource (@resources) {
 	    # http://stackoverflow.com/a/6640851/53897
 	    $resource =~ m/uuid:([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/;
-	    # print "$1\n";
 	    if ($1 eq $requested_resource) {
 		$found = (1 == 1);
 		last;
@@ -99,7 +103,7 @@ sub returnStatusCodeFor {
     # -- Check content type
 
     if (! ($resource_type eq $json_ticket->{type})) {
-	return "415"; # diffent media requested than approved for
+	return "415"; # different media requested than approved for
     }      
 
     # -- Nothing left to check. We're good.
