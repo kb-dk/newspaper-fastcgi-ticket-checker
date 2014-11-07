@@ -19,7 +19,7 @@ my $cfg = new Config::Simple("../fcgid-access-checker.ini");
 
 my $memcached_server = $cfg->param("memcached.server") or die "no memcached.server";
 my $resource_type = $cfg->param("doms.resource_type") or die "no doms.resource_type";
-my $url_pattern = $cfg->param("doms.url_pattern") or die "no doms.url_pattern";
+my $uuid_pattern = $cfg->param("checker.uuid_pattern") or die "no checker.uuid_pattern";
 
 #
 
@@ -30,18 +30,21 @@ my $memd = new Cache::Memcached {
 
 my $json = JSON->new->allow_nonref;
 
-my $url_regexp = qr/$url_pattern/;  # prepared regexp
+my $uuid_regexp = qr/$uuid_pattern/;  # prepared regexp
 
 ### -- go
 
+# http://achernar/iipsrv-auth/?DeepZoom=/net/zone1.isilon.sblokalnet/ifs/archive/avis-show-devel/symlinks/e/6/4/4/e644015b-f72b-4e20-8e99-7d7587e8c03e.dzi
+
 while (my $q = CGI::Fast->new) {
     my $ticket_id = $q->param("ticket");
+    my $dz = $q -> param("DeepZoom");
     my $remote_ip = $q->remote_addr();
     my $request_url = $q->url();
 
     my $status;
 
-    if ($request_url =~ /$url_regexp/) {
+    if (defined $dz && $dz =~ /$uuid_regexp/) {
 
         my $requested_resources = $1;
 
