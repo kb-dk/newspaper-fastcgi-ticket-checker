@@ -31,7 +31,8 @@ my $cfg = new Config::Simple("$directory/../fcgid-access-checker.ini");
 
 my $memcached_server = $cfg->param("memcached.server") or die "no memcached.server";
 my $resource_type = $cfg->param("doms.resource_type") or die "no doms.resource_type";
-my $uuid_pattern = $cfg->param("checker.uuid_pattern") or die "no checker.uuid_pattern";
+my $ticket_uuid_pattern = $cfg->param("checker.ticket_uuid_pattern") or die "no checker.ticket_uuid_pattern";
+my $doms_uuid_pattern = $cfg->param("checker.doms_uuid_pattern") or die "no checker.doms_uuid_pattern";
 my $ticket_param = $cfg->param("checker.ticket_param") or die "no checket.ticker_param (empty means look in url path)";
 
 #
@@ -43,7 +44,9 @@ my $memd = new Cache::Memcached {
 
 my $json = JSON->new->allow_nonref;
 
-my $uuid_regexp = qr/$uuid_pattern/;  # prepared regexp
+# prepare regexps
+my $ticket_uuid_regexp = qr/$ticket_uuid_pattern/;
+my $doms_uuid_regexp = qr/$doms_uuid_pattern/;
 
 ### -- go
 
@@ -52,19 +55,21 @@ my $uuid_regexp = qr/$uuid_pattern/;  # prepared regexp
 while (my $q = CGI::Fast->new) {
     my $ticket_id = "";
     if ($ticket_param eq "") {
-	$q->url(-absolute=>1) =~ /$uuid_regexp/;
+	$q->url(-absolute=>1) =~ /$ticket_uuid_regexp/;
 	$ticket_id = $1;
     } else {
-	$ticket_id = $q->param($ticket_param);
+	$q->param($ticket_param) =~ /$ticket_uuid_regexp/;
+	$ticket_id = $1;
     }
-    
+
+    if ($ticket_id) {
     my $dz = $q -> param("DeepZoom");
     my $remote_ip = $q->remote_addr();
     my $request_url = $q->url();
 
     my $status;
 
-    if (defined $dz && $dz =~ /$uuid_regexp/) {
+    if (defined $dz && $dz =~ /$doms_uuid_regexp/) {
 
         my $requested_resources = $1;
 
@@ -74,6 +79,9 @@ while (my $q = CGI::Fast->new) {
     } else {
 	$status = "200";
     }
+    } else {
+	$status = "400"; # bad request without ticket info
+    }
 
-    print("Status: $ticket_id $status\n\n");
+    print("Status: $status\n\n");
 }
