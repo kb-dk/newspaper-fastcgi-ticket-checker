@@ -6,6 +6,8 @@ use diagnostics;
 
 package CheckTicket;
 
+# Currently logs cause for rejection.  Discuss if this is needed/wanted in production.
+
 sub returnStatusCodeFor {
     #
     # Code is deliberately unoptimized! Please don't improve without good reason.
@@ -28,22 +30,22 @@ sub returnStatusCodeFor {
 
     if (!defined $ticket) {
 	print STDERR "no ticket\n";
-	return "500"; # bad environment
+	return "500"; 
     }
 
     if (!defined $remote_ip) {
 	print STDERR "no remote_ip\n";
-	return "500"; # bad environment
+	return "500"; 
     }
 
     if (!defined $requested_resource) {
 	print STDERR "no requested_resource\n";
-	return "500"; # bad environment
+	return "500"; 
     }
     
     if (!defined $resource_type) {
 	print STDERR "no resource_type\n";
-	return "500"; # bad environment
+	return "500"; 
     }
 
     my $json_ticket;
@@ -52,11 +54,11 @@ sub returnStatusCodeFor {
     eval {
 	$json_ticket = $json->decode($ticket);
     };
-    if ($@) {
-	print STDERR "bad json\n";
-	return "500"; # decode croaked - most likely bad JSON.
-    }
 
+    if ($@) {
+	print STDERR "decode croaked - most likely bad JSON\n";
+	return "500"; 
+    }
 
     if (!defined $json_ticket) {
         print STDERR "no json_ticket\n";
@@ -71,14 +73,15 @@ sub returnStatusCodeFor {
     }
 
     my $json_ticket_ipaddress = $json_ticket->{ipAddress};
+
     if (!defined $json_ticket_ipaddress) {
         print STDERR "bad json_ticket_ipaddress\n";
-	return "500"; # bad memcached entry
+	return "500";
     }
     
     if (!($remote_ip eq $json_ticket_ipaddress)) {
-	print STDERR "IP " . $remote_ip . "!=" . $json_ticket_ipaddress;
-	return "403"; # different IP-number
+	print STDERR "IP different: " . $remote_ip . " != " . $json_ticket_ipaddress;
+	return "403"; 
     }
     
     # -- Check requested UUID is in list of resources inside ticket.
@@ -105,8 +108,8 @@ sub returnStatusCodeFor {
 	    }
 	}
 	if ($found == (1 == 0)) {
-	    print STDERR "bad resource: $requested_resource not in @resources";
-	    return "403"; # not an approved resource
+	    print STDERR "bad resource: $requested_resource not in @resources\n";
+	    return "403"; 
 	}
     } else {
 	print STDERR "bad memcached entry\n";
@@ -116,8 +119,8 @@ sub returnStatusCodeFor {
     # -- Check content type
 
     if (! ($resource_type eq $json_ticket->{type})) {
-        print STDERR "resouce_type $resource_type != json_ticket{type} " . $json_ticket->{type} . "\n";
-	return "415"; # different media requested than approved for
+        print STDERR "different media requested than approved for: resource_type $resource_type != json_ticket{type} " . $json_ticket->{type} . "\n";
+	return "415";
     }      
 
     # -- Nothing left to check. We're good.
