@@ -22,22 +22,27 @@ sub returnStatusCodeFor {
     my ($json, $ticket, $remote_ip, $requested_resource, $resource_type) = @_;
 
     if (!defined $json) {
-	return "500"; # bad environment
+	print STDERR "no json\n";
+	return "500"; 
     }
 
     if (!defined $ticket) {
+	print STDERR "no ticket\n";
 	return "500"; # bad environment
     }
 
     if (!defined $remote_ip) {
+	print STDERR "no remote_ip\n";
 	return "500"; # bad environment
     }
 
     if (!defined $requested_resource) {
+	print STDERR "no requested_resource\n";
 	return "500"; # bad environment
     }
     
     if (!defined $resource_type) {
+	print STDERR "no resource_type\n";
 	return "500"; # bad environment
     }
 
@@ -48,25 +53,31 @@ sub returnStatusCodeFor {
 	$json_ticket = $json->decode($ticket);
     };
     if ($@) {
+	print STDERR "bad json\n";
 	return "500"; # decode croaked - most likely bad JSON.
     }
 
+
     if (!defined $json_ticket) {
-	return "500"; # bad ticket
+        print STDERR "no json_ticket\n";
+	return "500"; 
     }
 
     # -- Check IP number is defined and correct.
     
     if (!defined $remote_ip) {
-	return "500"; # bad environment
+        print STDERR "bad remote_ip\n";
+	return "500";
     }
 
     my $json_ticket_ipaddress = $json_ticket->{ipAddress};
     if (!defined $json_ticket_ipaddress) {
+        print STDERR "bad json_ticket_ipaddress\n";
 	return "500"; # bad memcached entry
     }
     
     if (!($remote_ip eq $json_ticket_ipaddress)) {
+	print STDERR "IP " . $remote_ip . "!=" . $json_ticket_ipaddress;
 	return "403"; # different IP-number
     }
     
@@ -94,15 +105,18 @@ sub returnStatusCodeFor {
 	    }
 	}
 	if ($found == (1 == 0)) {
+	    print STDERR "bad resource: $requested_resource not in @resources";
 	    return "403"; # not an approved resource
 	}
     } else {
-	return "500"; # bad memcached entry
+	print STDERR "bad memcached entry\n";
+	return "500";
     }
     
     # -- Check content type
 
     if (! ($resource_type eq $json_ticket->{type})) {
+        print STDERR "resouce_type $resource_type != json_ticket{type} " . $json_ticket->{type} . "\n";
 	return "415"; # different media requested than approved for
     }      
 

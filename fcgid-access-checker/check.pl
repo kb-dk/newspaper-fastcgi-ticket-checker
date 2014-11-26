@@ -55,18 +55,23 @@ my $resource_uuid_regexp = qr/$resource_uuid_pattern/;
 
 ### -- go
 
+print STDERR "access checker running.";
 
 while (my $q = CGI::Fast->new) {
     # http://perldoc.perl.org/CGI.html#OBTAINING-THE-SCRIPT'S-URL
     # -absolute give "/path/to/script.cgi"
     
-    my $ticket_uuid_source = ($ticket_param eq "") ? $q->url(-absolute=>1) : $q->param($ticket_param);
+    my $ticket_uuid_source = ($ticket_param eq ".") ? $q->url(-absolute=>1) : $q->param($ticket_param);
     $ticket_uuid_source =~ /$ticket_uuid_regexp/; # create $1
     my $ticket_id = $1;
-    
-    my $resource_uuid_source = ($resource_param eq "") ? $q->url(-absolute=>1) : $q->param($resource_param);
+   print STDERR "ticket_id " . $ticket_id . "\n";
+   print STDERR "R2 " . $resource_param . " - " . (defined $resource_param) . " _ " . $q->url(-absolute=>1) . "\n";
+ 
+    my $resource_uuid_source = ($resource_param ne ".") ? $q->param($resource_param) : $q->url(-absolute=>1);
+   print STDERR "R1 " . $resource_uuid_source . "\n";
     $resource_uuid_source =~ /$resource_uuid_regexp/; # create $1
     my $resource_id = $1;
+	print STDERR "resource_id: $resource_id\n";
     
     my $remote_ip = $q->remote_addr();
     my $request_url = $q->url();
