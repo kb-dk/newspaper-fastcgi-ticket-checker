@@ -8,7 +8,7 @@ package CheckTicket;
 
 sub returnStatusCodeFor {
     #
-    # Code is deliberately unoptimized! Please don't improve.
+    # Code is deliberately unoptimized! Please don't improve without good reason.
     #
     # http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
     # 200 = ok
