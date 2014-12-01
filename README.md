@@ -26,3 +26,14 @@ Notes:
 3) Currently supports one memcached server only.
 
 /tra 2014-11-05
+
+Code now works.
+
+tests in test/
+source in fcgid-access-checker/
+
+Design note: Perl was chosen as jFastCGI did not support ACCESS
+CHECKER, and Python was too much in flux for our target.  Perl 5 is
+quite stable and has good modules for this.
+
+/tra 2014-12-01

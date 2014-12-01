@@ -1,6 +1,8 @@
 #!/usr/bin/perl
 
 use warnings;
+# For some reason the BEGIN-magic cause "use strict" to fail causing
+# Apache to consider the script broken.  Could not find quick solution.
 #use strict;
 use diagnostics;
 
@@ -11,8 +13,9 @@ use IO::Handle;
 use JSON;
 
 # http://learn.perl.org/faq/perlfaq8.html#How-do-I-add-the-directory-my-program-lives-in-to-the-module-library-search-path
+
 BEGIN {
-    # Magic to derive directory of running script.
+    # Magic to derive directory of running script so we can tell Perl to look there.
     use File::Spec::Functions qw(rel2abs);
     use File::Basename qw(dirname);
     my $path = rel2abs($0);
@@ -22,7 +25,6 @@ BEGIN {
 use lib $directory;
 
 use CheckTicket;
-
 
 ### -- 
 
@@ -38,8 +40,6 @@ my $ticket_param = $cfg->param("checker.ticket_param") or die "no checket.ticker
 
 my $resource_uuid_pattern = $cfg->param("checker.resource_uuid_pattern") or die "no checker.resource_uuid_pattern";
 my $resource_param = $cfg->param("checker.resource_param") or die "no checket.resource_param (empty means look in url path)";
-
-# 
 
 my $memd = new Cache::Memcached {
     'servers' => [$memcached_server],
@@ -59,13 +59,14 @@ print STDERR "access checker ready.\n";
 
 while (my $q = CGI::Fast->new) {
     # http://perldoc.perl.org/CGI.html#OBTAINING-THE-SCRIPT'S-URL
-    # -absolute give "/path/to/script.cgi"
+    # "-absolute" gives "/path/to/script.cgi"
 
+    # "." is dirty hack as Config::Simple returns the empty string as an empty array
     my $ticket_uuid_source = ($ticket_param eq ".") ? $q->url(-absolute=>1) : $q->param($ticket_param);
     $ticket_uuid_source =~ /$ticket_uuid_regexp/; # create $1
     my $ticket_id = $1;
     
-    my $resource_uuid_source = ($resource_param ne ".") ? $q->param($resource_param) : $q->url(-absolute=>1);
+    my $resource_uuid_source = ($resource_param eq ".") ? $q->url(-absolute=>1) : $q->param($resource_param);
     $resource_uuid_source =~ /$resource_uuid_regexp/; # create $1
     my $resource_id = $1;
     
