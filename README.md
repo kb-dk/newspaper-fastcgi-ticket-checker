@@ -37,3 +37,11 @@ CHECKER, and Python was too much in flux for our target.  Perl 5 is
 quite stable and has good modules for this.
 
 /tra 2014-12-01
+
+Preparing for production.
+
+Offline usage:
+
+	MEMCACHED_SERVERS=alhena:11211 perl .../stream-check.pl
+
+/tra 2014-12-04
