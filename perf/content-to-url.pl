@@ -20,8 +20,11 @@ while(<STDIN>) {
 	# {"doms_aviser_edition:uuid:000a772b-e060-4add-8e0e-fb47bf90bbf1":"55bb859c-8973-4438-a18c-7fcc90522bf0"}
 	
 	if (($ticket) = $content =~ m/\:"([^"]+)"}/) {
-	    # 
+	    #print STDERR "$ticket\n";
+	} else {
+	    print STDERR "No ticket for $_ - content = $content\n";
 	}
+	$url =~ s/\Q%5BticketId%5D/$ticket/;
 	$url =~ s/\Q[ticketId]/$ticket/;
 	print "$url\n";
     }

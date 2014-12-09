@@ -13,24 +13,26 @@
     
 use warnings;
 use strict;
-use DB_File;
+#use DB_File;
 use LWP::Simple;
 
-our (%h, $k, $v);
+#our (%h, $k, $v);
 
-tie %h, "DB_File", "content-cache.db", O_RDWR|O_CREAT, 0666, $DB_HASH 
-    or die "Cannot open cache: $!\n";
+#tie %h, "DB_File", "content-cache.db", O_RDWR|O_CREAT, 0666, $DB_HASH 
+#    or die "Cannot open cache: $!\n";
 
-my $UUID_PREFIX='doms_aviser_edition:uuid:';
+my $UUID_PREFIX = $ARGV[0] or #
+    die "provide key prefix as ARG[0].  Examples: 'doms_aviser_edition:uuid:' and 'doms_aviser_page:uuid:'";
 
 while (<STDIN>) {
     my ($uuid) = /([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/;
     my $key = $UUID_PREFIX . $uuid;
     
-    if (!defined $h{$key}) {
-	my $content = get("http://iapetus:9311/content-resolver/content?id=$key");
-
-	$h{$key} = $content;
-    }
-    print $h{$key};
+#    if (!defined $h{$key}) {
+    my $content = get("http://iapetus:9311/content-resolver/content?id=$key"); # FIXME: Better conf.
+    print $content;
+    
+#    $h{$key} = $content;
+#    }
+#    print $h{$key};
 }
