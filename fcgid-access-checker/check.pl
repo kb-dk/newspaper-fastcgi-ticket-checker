@@ -34,7 +34,8 @@ my $cfg = new Config::Simple($config_file) or die "No config file: $config_file"
 
 ### -- Establish configuration 
 
-my @memcached_servers = $cfg->param("memcached_servers") or die "no memcached_servers";
+# There are some very delicate issues with having multiple servers.  USE ONLY ONE FOR NOW.
+my $memcached_servers = $cfg->param("memcached_servers") or die "no memcached_servers";
 
 my $resource_type = $cfg->param("resource_type") or die "no resource_type";
 
@@ -47,7 +48,10 @@ my $resource_param = $cfg->param("resource_param") or die "no resource_param ('.
 ### -- Prepare data structures
 
 my $memd = new Cache::Memcached {
-    'servers' => @memcached_servers,
+# HACK!  See above.
+#    'servers' => @memcached_servers,
+    'servers' => [$memcached_servers],
+    'debug' => 0,
     'compress_threshold' => 10_000,
 };
 
@@ -58,10 +62,10 @@ my $resource_uuid_regexp = qr/$resource_uuid_pattern/;
 
 ### -- go
 
-print STDERR "access checker ready.\n";
+print STDERR "access checker ready using $config_file.  memcached servers=$memcached_servers.\n";
 
 while (my $q = CGI::Fast->new) {
-    my $start = Time::Hires::gettimeofday();
+    my $start = Time::HiRes::gettimeofday();
     
     my $status = "400"; # BAD REQUEST
     
@@ -85,13 +89,13 @@ while (my $q = CGI::Fast->new) {
 	    my $memcached_get_start = Time::HiRes::gettimeofday();
 	    my $ticket_content = $memd -> get($ticket_id);
 	    my $memcached_get_end = Time::HiRes::gettimeofday();
-	    print STDERR "Memcached took " . ($memcached_get_end - $memcached_get_start);
+	    print STDERR "Memcached took " . ($memcached_get_end - $memcached_get_start) . " s\n";
 	    $status = CheckTicket::returnStatusCodeFor($json, $ticket_content, $remote_ip, $resource_id, $resource_type);
 	}
     }
     my $end = Time::HiRes::gettimeofday();
     print("Status: $status\n\n");
-    print STDERR "Took " . ($end - $start);
+    print STDERR "Took " . ($end - $start) . " s\n";
 }
 print STDERR "access checker done.\n";
 
