@@ -9,9 +9,9 @@ use diagnostics;
 use CGI::Fast;
 use Cache::Memcached;
 use Config::Simple;
-use Env qw(MEMCACHED_SERVERS);
 use IO::Handle;
 use JSON;
+use Time::HiRes;
 
 # http://learn.perl.org/faq/perlfaq8.html#How-do-I-add-the-directory-my-program-lives-in-to-the-module-library-search-path
 
@@ -34,14 +34,7 @@ my $cfg = new Config::Simple($config_file) or die "No config file: $config_file"
 
 ### -- Establish configuration 
 
-# http://sourceforge.net/projects/iipimage/files/IIP%20Server/iipsrv-0.9.9/
-
-# MEMCACHED_SERVERS: A comma-delimitted list of memcached servers with optional
-# port numbers. For example: localhost,192.168.0.1:8888,192.168.0.2.
-
-die "no $MEMCACHED_SERVERS" unless defined $MEMCACHED_SERVERS;
-
-my @memcached_servers = split(',', $MEMCACHED_SERVERS);
+my @memcached_servers = $cfg->param("memcached_servers") or die "no memcached_servers";
 
 my $resource_type = $cfg->param("resource_type") or die "no resource_type";
 
@@ -68,6 +61,8 @@ my $resource_uuid_regexp = qr/$resource_uuid_pattern/;
 print STDERR "access checker ready.\n";
 
 while (my $q = CGI::Fast->new) {
+    my $start = Time::Hires::gettimeofday();
+    
     my $status = "400"; # BAD REQUEST
     
     # http://perldoc.perl.org/CGI.html#OBTAINING-THE-SCRIPT'S-URL
@@ -87,13 +82,16 @@ while (my $q = CGI::Fast->new) {
 	    my $remote_ip = $q->remote_addr();
 	    my $request_url = $q->url();
 
+	    my $memcached_get_start = Time::HiRes::gettimeofday();
 	    my $ticket_content = $memd -> get($ticket_id);
-	    
+	    my $memcached_get_end = Time::HiRes::gettimeofday();
+	    print STDERR "Memcached took " . ($memcached_get_end - $memcached_get_start);
 	    $status = CheckTicket::returnStatusCodeFor($json, $ticket_content, $remote_ip, $resource_id, $resource_type);
 	}
     }
-
+    my $end = Time::HiRes::gettimeofday();
     print("Status: $status\n\n");
+    print STDERR "Took " . ($end - $start);
 }
 print STDERR "access checker done.\n";
 

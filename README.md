@@ -40,8 +40,8 @@ quite stable and has good modules for this.
 
 Preparing for production.
 
-Offline usage:
+Use 
+http://achernar:7880/fedora/risearch?type=triples&lang=spo&format=N-Triples&limit=&dt=on&stream=on&query=*+*+%3Cinfo%3Afedora%2Fdoms%3AContentModel_EditionPage%3E&template=
+to ask DOMS for test uuids.
 
-	MEMCACHED_SERVERS=alhena:11211 perl .../stream-check.pl
-
-/tra 2014-12-04
+/tra 2014-12-09
