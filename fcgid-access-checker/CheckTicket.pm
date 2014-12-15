@@ -86,7 +86,7 @@ sub returnStatusCodeFor {
     }
     
     if ($remote_ip ne $json_ticket_ipaddress) {
-	print STDERR "IP different: " . $remote_ip . " != " . $json_ticket_ipaddress;
+	print STDERR "IP different: " . $remote_ip . " != " . $json_ticket_ipaddress . "\n";
 	return $FORBIDDEN; 
     }
     
