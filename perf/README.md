@@ -7,7 +7,7 @@ Usage:
 	   
 * Resolve the content for each uuid:
 
-  	  sh filename-to-content.sh <files.txt >content.txt
+  	  sh filename-to-content.pl <files.txt >content.txt
 
   (TODO: Make uuid prefix configurable, for now edit the script)
 

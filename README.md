@@ -7,6 +7,7 @@ In order to validate access to a given resource we must check that the given req
 to the credentials stored in JSON format in memcached.
 
 Ask KFC or TRA for instructions of how to manually create a ticket for testing purposes.
+(as of 2014-12-15 see http://alhena:7950/newspaper-auth-demo/)
 
 Under Ubuntu 14.10 adapt /etc/apache2/apache2.conf similarly to
 
