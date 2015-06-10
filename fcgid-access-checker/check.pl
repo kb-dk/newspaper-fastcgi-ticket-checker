@@ -91,9 +91,7 @@ while (my $q = CGI::Fast->new) {
 	    my $memcached_get_end = Time::HiRes::gettimeofday();
 	    print STDERR "Memcached took " . ($memcached_get_end - $memcached_get_start) . " s\n";
 	    $status = CheckTicket::returnStatusCodeFor($json, $ticket_content, $remote_ip, $resource_id, $resource_type);
-	    if ($status eq "200") {
-	        print STDERR "$json, $ticket_content, $remote_ip, $resource_id, $resource_type,$start"
-	    }
+        print STDERR "$status, $json, $ticket_content, $remote_ip, $resource_id, $resource_type,$start"
 	}
     }
     my $end = Time::HiRes::gettimeofday();
