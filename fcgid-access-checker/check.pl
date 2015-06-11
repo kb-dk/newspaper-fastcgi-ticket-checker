@@ -65,8 +65,7 @@ my $resource_uuid_regexp = qr/$resource_uuid_pattern/;
 print STDERR "access checker ready using $config_file.  memcached servers=$memcached_servers.\n";
 
 while (my $q = CGI::Fast->new) {
-    my $start = Time::HiRes::gettimeofday();
-    
+
     my $status = "400"; # BAD REQUEST
     
     # http://perldoc.perl.org/CGI.html#OBTAINING-THE-SCRIPT'S-URL
@@ -75,28 +74,22 @@ while (my $q = CGI::Fast->new) {
     # "." is dirty hack as Config::Simple returns the empty string as an empty array
     my $ticket_uuid_source = ($ticket_param eq ".") ? $q->url(-absolute=>1) : $q->param($ticket_param);
     if (defined $ticket_uuid_source) {
-	$ticket_uuid_source =~ /$ticket_uuid_regexp/; # create $1
-	my $ticket_id = $1;
-	
-	my $resource_uuid_source = ($resource_param eq ".") ? $q->url(-absolute=>1) : $q->param($resource_param);
-	if (defined $resource_uuid_source) {
-	    $resource_uuid_source =~ /$resource_uuid_regexp/; # create $1
-	    my $resource_id = $1;
-	    
-	    my $remote_ip = $q->remote_addr();
-	    my $request_url = $q->url();
+        $ticket_uuid_source =~ /$ticket_uuid_regexp/; # create $1
+        my $ticket_id = $1;
 
-	    my $memcached_get_start = Time::HiRes::gettimeofday();
-	    my $ticket_content = $memd -> get($ticket_id);
-	    my $memcached_get_end = Time::HiRes::gettimeofday();
-	    print STDERR "Memcached took " . ($memcached_get_end - $memcached_get_start) . " s\n";
-	    $status = CheckTicket::returnStatusCodeFor($json, $ticket_content, $remote_ip, $resource_id, $resource_type);
-        print STDERR "$status, $json, $ticket_content, $remote_ip, $resource_id, $resource_type,$start"
-	}
+        my $resource_uuid_source = ($resource_param eq ".") ? $q->url(-absolute=>1) : $q->param($resource_param);
+        if (defined $resource_uuid_source) {
+            $resource_uuid_source =~ /$resource_uuid_regexp/; # create $1
+            my $resource_id = $1;
+
+            my $remote_ip = $q->remote_addr();
+            my $request_url = $q->url();
+
+            my $ticket_content = $memd -> get($ticket_id);
+            $status = CheckTicket::returnStatusCodeFor($json, $ticket_content, $remote_ip, $resource_id, $resource_type);
+        }
     }
-    my $end = Time::HiRes::gettimeofday();
     print("Status: $status\n\n");
-    print STDERR "Took " . ($end - $start) . " s\n";
 }
 print STDERR "access checker done.\n";
 
