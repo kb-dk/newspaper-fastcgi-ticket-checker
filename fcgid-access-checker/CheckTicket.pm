@@ -135,7 +135,6 @@ sub returnStatusCodeFor {
         'userAttributes' => $json_ticket->{userAttributes},
         'resource_id' => $requested_resource,
         'resource_type' => $resource_type,
-        'remote_ip' => $remote_ip,
         'dateTime' =>$now_string,
         };
     my $userAttributes = $json->encode($authlogEntry);
