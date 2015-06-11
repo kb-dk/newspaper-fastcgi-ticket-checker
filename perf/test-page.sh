@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # invoke with uuid embedded lines piped in.
 date
 mkdir -p tmp
@@ -5,7 +6,7 @@ mkdir -p tmp
 perl filename-to-content.pl doms_aviser_page:uuid: | pv -l > tmp/content.txt
 
 # get tickets
-<tmp/content.txt perl content-to-url.pl 172.18.100.153 | pv -l  >tmp/ticket-urls.txt
+<tmp/content.txt perl content-to-url.pl $(hostname -I) | pv -l  >tmp/ticket-urls.txt
 
 sed 's/\-auth\//\//' < tmp/ticket-urls.txt > tmp/no-ticket-urls.txt 
 
