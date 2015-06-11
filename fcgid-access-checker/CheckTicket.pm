@@ -5,7 +5,6 @@
 use warnings;
 use strict;
 use diagnostics;
-use DateTime;
 
 package CheckTicket;
 
@@ -130,13 +129,14 @@ sub returnStatusCodeFor {
 	    return $BAD_MEDIA_TYPE;
     }
 
-    my $dt   = DateTime->now(time_zone=>'local');   # Stores current date and time as datetime object
+    use POSIX 'strftime';
+    my $now_string = strftime("%FT%T%z", localtime());
     my $authlogEntry = {
         'userAttributes' => $json_ticket->{userAttributes},
         'resource_id' => $requested_resource,
         'resource_type' => $resource_type,
         'remote_ip' => $remote_ip,
-        'dateTime' =>"$dt",
+        'dateTime' =>$now_string,
         };
     my $userAttributes = $json->encode($authlogEntry);
     print STDERR "AUTHLOG: $userAttributes\n";
