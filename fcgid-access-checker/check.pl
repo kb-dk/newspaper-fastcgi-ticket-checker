@@ -83,10 +83,9 @@ while (my $q = CGI::Fast->new) {
             my $resource_id = $1;
 
             my $remote_ip = $q->remote_addr();
-            my $request_url = $q->url(-absolute => 1, -query_string => 1);
 
             my $ticket_content = $memd -> get($ticket_id);
-            $status = CheckTicket::returnStatusCodeFor($json, $ticket_content, $remote_ip, $resource_id, $resource_type, $request_url);
+            $status = CheckTicket::returnStatusCodeFor($json, $ticket_content, $remote_ip, $resource_id, $resource_type, $ticket_id);
         }
     }
     print("Status: $status\n\n");

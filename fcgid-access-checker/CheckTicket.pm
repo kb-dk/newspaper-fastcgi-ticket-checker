@@ -27,7 +27,7 @@ sub returnStatusCodeFor {
     my $INTERNAL_SERVER_ERROR = "500";
     my $SERVICE_UNAVAILABLE = "503";
     
-    my ($json, $ticket, $remote_ip, $requested_resource, $resource_type, $request_url) = @_;
+    my ($json, $ticket, $remote_ip, $requested_resource, $resource_type, $ticket_id) = @_;
 
     if (!defined $json) {
         print STDERR "no json\n";
@@ -137,7 +137,7 @@ sub returnStatusCodeFor {
         'resource_type' => $resource_type,
         'remote_ip' => $remote_ip,
         'dateTime' =>$now_string,
-        'url' => $request_url,
+        'ticket_id' => $ticket_id,
         };
     my $userAttributes = $json->encode($authlogEntry);
     print STDERR "AUTHLOG: $userAttributes\n";
