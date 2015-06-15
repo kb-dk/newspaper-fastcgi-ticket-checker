@@ -40,7 +40,7 @@ sub returnStatusCodeFor {
     
     my ($json_parser, $ticket, $remote_ip, $requested_resource, $resource_type, $ticket_id, $log_folder) = @_;
 
-    if (!defined $json) {
+    if (!defined $json_parser) {
         print STDERR "no json\n";
         return $INTERNAL_SERVER_ERROR;
     }
