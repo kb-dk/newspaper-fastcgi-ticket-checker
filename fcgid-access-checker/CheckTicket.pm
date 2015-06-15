@@ -14,7 +14,8 @@ sub usageLogger {
     $t[5] += 1900;
     $t[4]++;
     my $today = sprintf("%04d-%02d-%02d", @t[5,4,3]);
-    if (open(my $out, '>>', "${log_folder}/${resource_type}_${today}.log") or return) {
+    print STDERR "logging to $log_folder/${resource_type}_${today}.log";
+    if (open(my $out, '>>', "$log_folder/${resource_type}_${today}.log")) {
         chomp $msg;
         print $out "$msg\n";
         close $out;
