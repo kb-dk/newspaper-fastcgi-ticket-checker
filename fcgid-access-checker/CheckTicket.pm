@@ -129,8 +129,7 @@ sub returnStatusCodeFor {
 	    return $BAD_MEDIA_TYPE;
     }
 
-    use POSIX 'strftime';
-    my $now_string = strftime("%FT%T%z", localtime());
+    my $now_string = gmtime(time());
     my $authlogEntry = {
         'userAttributes' => $json_ticket->{userAttributes},
         'resource_id' => $requested_resource,
