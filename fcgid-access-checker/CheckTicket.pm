@@ -129,7 +129,7 @@ sub returnStatusCodeFor {
 	    return $BAD_MEDIA_TYPE;
     }
 
-    my $now_string = gmtime(time());
+    my $now_string = time();
     my $authlogEntry = {
         'userAttributes' => $json_ticket->{userAttributes},
         'resource_id' => $requested_resource,
