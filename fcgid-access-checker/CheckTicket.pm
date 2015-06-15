@@ -139,7 +139,7 @@ sub returnStatusCodeFor {
         'ticket_id' => $ticket_id,
         };
     my $userAttributes = $json->encode($authlogEntry);
-    print STDERR "AUTHLOG: $userAttributes\n";
+    print STDERR "*USAGELOG*: $userAttributes\n";
     # -- Nothing left to check. We're good.
     
     return $OK;

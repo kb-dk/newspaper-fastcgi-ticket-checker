@@ -11,8 +11,9 @@ use LWP::Simple;
 my $ticketurlprefix = "http://alhena:7950/ticket-system-service/tickets/issueTicket"; # FIXME, make configurable
 
 while(<STDIN>) {
-    if (/{"([^"]+[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})".*"type":"([^"]+)","url":\["([^"]+)"\]}\]}}/) {
+    if (/{\"([^"]+[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})":{"resource":\[{"type":"([^"]+)","url":\["([^"]+).*/) {
 	my $url = $3;
+	print $url
 	my $ticketurl = "$ticketurlprefix?id=$1&type=$2&ipAddress=$ARGV[0]&SBIPRoleMapper=inhouse";
 	my $content = get($ticketurl);
 
