@@ -8,7 +8,18 @@ use diagnostics;
 
 package CheckTicket;
 
-# Currently logs cause for rejection.  TODO: Discuss if this is needed/wanted in production.
+sub usageLogger {
+    my ($msg,$resource_type,$log_folder) = @_;
+    my @t = localtime;
+    $t[5] += 1900;
+    $t[4]++;
+    my $today = sprintf("%04d-%02d-%02d", @t[5,4,3]);
+    if (open(my $out, '>>', $log_folder + "/" + $resource_type + "_" + $today + ".log") or return) {
+        chomp $msg;
+        print $out "$msg\n";
+        close $out;
+    }
+}
 
 sub returnStatusCodeFor {
     #
@@ -27,7 +38,7 @@ sub returnStatusCodeFor {
     my $INTERNAL_SERVER_ERROR = "500";
     my $SERVICE_UNAVAILABLE = "503";
     
-    my ($json, $ticket, $remote_ip, $requested_resource, $resource_type, $ticket_id) = @_;
+    my ($json_parser, $ticket, $remote_ip, $requested_resource, $resource_type, $ticket_id, $log_folder) = @_;
 
     if (!defined $json) {
         print STDERR "no json\n";
@@ -58,7 +69,7 @@ sub returnStatusCodeFor {
 
     # http://docstore.mik.ua/orelly/perl/cookbook/ch10_13.htm
     eval { # decode fails very hard, avoid crashing.
-    	$json_ticket = $json->decode($ticket);
+    	$json_ticket = $json_parser->decode($ticket);
     };
 
     if ($@) {
@@ -138,8 +149,8 @@ sub returnStatusCodeFor {
         'dateTime' =>$now_string,
         'ticket_id' => $ticket_id,
         };
-    my $userAttributes = $json->encode($authlogEntry);
-    print STDERR "*USAGELOG*: $userAttributes\n";
+    my $userAttributes = $json_parser->encode($authlogEntry);
+    usageLogger($userAttributes,$resource_type,$log_folder);
     # -- Nothing left to check. We're good.
     
     return $OK;

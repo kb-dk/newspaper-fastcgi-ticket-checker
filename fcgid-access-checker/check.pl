@@ -32,10 +32,14 @@ use CheckTicket;
 
 my $cfg = new Config::Simple($config_file) or die "No config file: $config_file";
 
+
+
 ### -- Establish configuration 
 
 # There are some very delicate issues with having multiple servers.  USE ONLY ONE FOR NOW.
 my $memcached_servers = $cfg->param("memcached_servers") or die "no memcached_servers";
+
+my $log_folder = $cfg->param("log_folder") or die "no log_folder defined";
 
 my $resource_type = $cfg->param("resource_type") or die "no resource_type";
 
@@ -85,7 +89,7 @@ while (my $q = CGI::Fast->new) {
             my $remote_ip = $q->remote_addr();
 
             my $ticket_content = $memd -> get($ticket_id);
-            $status = CheckTicket::returnStatusCodeFor($json, $ticket_content, $remote_ip, $resource_id, $resource_type, $ticket_id);
+            $status = CheckTicket::returnStatusCodeFor($json, $ticket_content, $remote_ip, $resource_id, $resource_type, $ticket_id, $log_folder);
         }
     }
     print("Status: $status\n\n");
