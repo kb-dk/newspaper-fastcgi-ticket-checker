@@ -1,8 +1,11 @@
-2015-06-11
+2015-06-18
 ====
-All time measurements are no longer printed
-A json formattet authlog entry is printed to STDERR, to 
-enable statistics
+
+* New configuration file entry "statistics_file" needs to point to
+  location of statistics file, where JSON entries are written to for
+  each request for later analysis.  flock and +>> is used to have
+  multiple fcgid instances write to the same file without dataloss.
+
 
 2014-12-15:
 ====

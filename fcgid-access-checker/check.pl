@@ -39,8 +39,6 @@ my $cfg = new Config::Simple($config_file) or die "No config file: $config_file"
 # There are some very delicate issues with having multiple servers.  USE ONLY ONE FOR NOW.
 my $memcached_servers = $cfg->param("memcached_servers") or die "no memcached_servers";
 
-my $log_folder = $cfg->param("log_folder") or die "no log_folder defined";
-
 my $resource_type = $cfg->param("resource_type") or die "no resource_type";
 
 my $ticket_uuid_pattern = $cfg->param("ticket_uuid_pattern") or die "no ticket_uuid_pattern";
@@ -48,6 +46,8 @@ my $ticket_param = $cfg->param("ticket_param") or die "no ticker_param ('.' mean
 
 my $resource_uuid_pattern = $cfg->param("resource_uuid_pattern") or die "no resource_uuid_pattern";
 my $resource_param = $cfg->param("resource_param") or die "no resource_param ('.' means look in url path)";
+
+my $statisticsFile = $cfg ->param("statistics_file") or die "no statistics_file";
 
 ### -- Prepare data structures
 
@@ -63,6 +63,8 @@ my $json = JSON->new->allow_nonref;
 
 my $ticket_uuid_regexp = qr/$ticket_uuid_pattern/;
 my $resource_uuid_regexp = qr/$resource_uuid_pattern/;
+
+open(my $STATISTICSHANDLE, "+>>", $statisticsFile) or die "open statistics file $statisticsFile\n";
 
 ### -- go
 
@@ -89,10 +91,11 @@ while (my $q = CGI::Fast->new) {
             my $remote_ip = $q->remote_addr();
 
             my $ticket_content = $memd -> get($ticket_id);
-            $status = CheckTicket::returnStatusCodeFor($json, $ticket_content, $remote_ip, $resource_id, $resource_type, $ticket_id, $log_folder);
+            $status = CheckTicket::returnStatusCodeFor($json, $ticket_content, $remote_ip, $resource_id, $resource_type, $ticket_id, $STATISTICSHANDLE);
         }
     }
     print("Status: $status\n\n");
 }
+close($STATISTICSHANDLE) or die "cannot close $STATISTICSHANDLE";
 print STDERR "access checker done.\n";
 

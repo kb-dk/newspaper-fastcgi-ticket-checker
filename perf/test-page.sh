@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# invoke with uuid embedded lines piped in.
+# invoke with uuid embedded lines on STDIN.
 date
 mkdir -p tmp
-# resolve 
+# resolve uuids
 perl filename-to-content.pl doms_aviser_page:uuid: | pv -l > tmp/content.txt
 
 # get tickets

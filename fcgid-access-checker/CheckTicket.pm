@@ -5,6 +5,7 @@
 use warnings;
 use strict;
 use diagnostics;
+use Fcntl qw<LOCK_EX LOCK_UN SEEK_END>;
 
 package CheckTicket;
 
@@ -148,18 +149,25 @@ sub returnStatusCodeFor {
 	return $BAD_MEDIA_TYPE;
     }
 
+    # -- Log information for statistics
+
     my $now_string = time();
-    my $authlogEntry = {
+    my $statisticsMap = {
         'userAttributes' => $json_ticket->{userAttributes},
         'resource_id' => $requested_resource,
         'resource_type' => $resource_type,
         'remote_ip' => $remote_ip,
-        'dateTime' =>$now_string,
+        'dateTime' => $now_string,
         'ticket_id' => $ticket_id,
     };
-    my $userAttributes = $json_parser->encode($authlogEntry);
-    usageLogger($userAttributes,$resource_type,$log_folder);
-    # -- Nothing left to check. We're good.
+
+    my $statisticsLine = $json_parser->encode($statisticsMap);
+
+    flock($LOGHANDLE, Fcntl::LOCK_EX);
+    print $LOGHANDLE localtime() . ": $statisticsLine\n";
+    flock($LOGHANDLE, Fcntl::LOCK_UN);
+
+    # -- Nothing left to do. We're good.
     
     return $OK;
 }
