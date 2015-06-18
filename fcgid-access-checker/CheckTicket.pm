@@ -41,7 +41,7 @@ sub returnStatusCodeFor {
     my $INTERNAL_SERVER_ERROR = "500";
     my $SERVICE_UNAVAILABLE = "503";
     
-    my ($json_parser, $ticket, $remote_ip, $requested_resource, $resource_type, $ticket_id, $log_folder) = @_;
+    my ($json_parser, $ticket, $remote_ip, $requested_resource, $resource_type, $ticket_id, $LOGHANDLE) = @_;
 
     if (!defined $json_parser) {
         print STDERR "no json\n";
@@ -68,6 +68,11 @@ sub returnStatusCodeFor {
         return $INTERNAL_SERVER_ERROR;
     }
 
+    if (!defined $LOGHANDLE) {
+        print STDERR "no logging file handle\n";
+        return $INTERNAL_SERVER_ERROR;
+    }
+
     my $json_ticket;
 
     # http://docstore.mik.ua/orelly/perl/cookbook/ch10_13.htm
@@ -76,32 +81,32 @@ sub returnStatusCodeFor {
     };
 
     if ($@) {
-	    print STDERR "decode croaked - most likely bad JSON\n";
-	    return $INTERNAL_SERVER_ERROR;
+	print STDERR "decode croaked - most likely bad JSON\n";
+	return $INTERNAL_SERVER_ERROR;
     }
 
     if (!defined $json_ticket) {
         print STDERR "no json_ticket\n";
-	    return $INTERNAL_SERVER_ERROR;
+	return $INTERNAL_SERVER_ERROR;
     }
 
     # -- Check IP number is defined and correct.
     
     if (!defined $remote_ip) {
         print STDERR "bad remote_ip\n";
-	    return $INTERNAL_SERVER_ERROR;
+	return $INTERNAL_SERVER_ERROR;
     }
 
     my $json_ticket_ipaddress = $json_ticket->{ipAddress};
 
     if (!defined $json_ticket_ipaddress) {
         print STDERR "bad json_ticket_ipaddress\n";
-	    return $INTERNAL_SERVER_ERROR;
+	return $INTERNAL_SERVER_ERROR;
     }
     
     if ($remote_ip ne $json_ticket_ipaddress) {
-	    print STDERR "IP different: " . $remote_ip . " != " . $json_ticket_ipaddress . "\n";
-	    return $FORBIDDEN;
+	print STDERR "IP different: " . $remote_ip . " != " . $json_ticket_ipaddress . "\n";
+	return $FORBIDDEN;
     }
     
     # -- Check requested UUID is in list of resources inside ticket.
@@ -130,7 +135,7 @@ sub returnStatusCodeFor {
         if ($found == $FALSE) {
             print STDERR "bad resource: $requested_resource not in \[@resources\]\n";
             return $FORBIDDEN;
-	    }
+	}
     } else {
         print STDERR "bad memcached entry\n";
         return $INTERNAL_SERVER_ERROR;
@@ -140,7 +145,7 @@ sub returnStatusCodeFor {
 
     if ($resource_type ne $json_ticket->{type}) {
         print STDERR "different media requested than approved for: resource_type $resource_type != json_ticket{type} " . $json_ticket->{type} . "\n";
-	    return $BAD_MEDIA_TYPE;
+	return $BAD_MEDIA_TYPE;
     }
 
     my $now_string = time();
@@ -151,7 +156,7 @@ sub returnStatusCodeFor {
         'remote_ip' => $remote_ip,
         'dateTime' =>$now_string,
         'ticket_id' => $ticket_id,
-        };
+    };
     my $userAttributes = $json_parser->encode($authlogEntry);
     usageLogger($userAttributes,$resource_type,$log_folder);
     # -- Nothing left to check. We're good.
