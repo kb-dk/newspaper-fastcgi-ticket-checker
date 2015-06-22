@@ -64,6 +64,7 @@ my $json = JSON->new->allow_nonref;
 my $ticket_uuid_regexp = qr/$ticket_uuid_pattern/;
 my $resource_uuid_regexp = qr/$resource_uuid_pattern/;
 
+# http://docstore.mik.ua/orelly/perl/cookbook/ch07_02.htm
 open(my $STATISTICSHANDLE, "+>>", $statisticsFile) or die "open statistics file $statisticsFile\n";
 
 ### -- go

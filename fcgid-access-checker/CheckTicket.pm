@@ -5,25 +5,9 @@
 use warnings;
 use strict;
 use diagnostics;
-use Fcntl qw<LOCK_EX LOCK_UN SEEK_END>;
+use Fcntl qw<LOCK_EX LOCK_UN>;
 
 package CheckTicket;
-
-sub usageLogger {
-    my ($msg,$resource_type,$log_folder) = @_;
-    my @t = localtime;
-    $t[5] += 1900;
-    $t[4]++;
-    my $today = sprintf("%04d-%02d-%02d", @t[5,4,3]);
-    my $path = "$log_folder/${resource_type}UsageStatistics_${today}.log";
-    open(my $filehandle, '+>>', $path) or do {
-        warn "$0: open $path: $!";
-        return;
-    };
-    chomp $msg;
-    print $filehandle "$msg\n";
-    close $filehandle;
-}
 
 sub returnStatusCodeFor {
     #

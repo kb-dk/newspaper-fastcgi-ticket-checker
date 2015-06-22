@@ -3,11 +3,18 @@ newspaper-fastcgi-ticket-checker
 
 Newspaper access ticker checker - Perl script running via fastcgi
 
-In order to validate access to a given resource we must check that the given request corresponds
-to the credentials stored in JSON format in memcached.
+In order to validate access to a given resource we must check that the
+given request corresponds to the credentials stored in JSON format in
+memcached.
 
-Ask KFC or TRA for instructions of how to manually create a ticket for testing purposes.
-(as of 2014-12-15 see http://alhena:7950/newspaper-auth-demo/)
+Development is expected to happen on achernar.  When check.pl or
+CheckTicket.pm is updated run "sudo /usr/local/sbin/restart_httpd.sh"
+to reload the script, and then run "perf/test-page.sh" which expects
+one or more lines containing a DOMS uuid on stdin, does the proper
+voodoo, and then downloads the corresponding assets to the "perf/tmp"
+folder.  As of 2015-06-19 this is hardcoded to the test environment
+including achernar.
+
 
 Under Ubuntu 14.10 adapt /etc/apache2/apache2.conf similarly to
 
@@ -46,3 +53,8 @@ http://achernar:7880/fedora/risearch?type=triples&lang=spo&format=N-Triples&limi
 to ask DOMS for test uuids.
 
 /tra 2014-12-09
+
+Statistics data logging added by TRA and ABR.  Processed by
+newspaper-usage-statistics.
+
+/tra 2015-06-19
