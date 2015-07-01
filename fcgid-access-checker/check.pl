@@ -49,6 +49,8 @@ my $resource_param = $cfg->param("resource_param") or die "no resource_param ('.
 
 my $statisticsFile = $cfg ->param("statistics_file") or die "no statistics_file";
 
+my $ignored_resource_pattern = $cfg ->param("ignored_resource_pattern");
+
 ### -- Prepare data structures
 
 my $memd = new Cache::Memcached {
@@ -92,7 +94,15 @@ while (my $q = CGI::Fast->new) {
             my $remote_ip = $q->remote_addr();
 
             my $ticket_content = $memd -> get($ticket_id);
-            $status = CheckTicket::returnStatusCodeFor($json, $ticket_content, $remote_ip, $resource_id, $resource_type, $ticket_id, $STATISTICSHANDLE);
+            $status = CheckTicket::returnStatusCodeFor($json,
+                                                       $ticket_content,
+                                                       $remote_ip,
+                                                       $resource_id,
+                                                       $resource_type,
+                                                       $resource_param,
+                                                       $ticket_id,
+                                                       $ignored_resource_pattern,
+                                                       $STATISTICSHANDLE);
         }
     }
     print("Status: $status\n\n");

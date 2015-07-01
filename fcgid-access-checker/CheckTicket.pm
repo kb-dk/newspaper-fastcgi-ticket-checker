@@ -26,7 +26,15 @@ sub returnStatusCodeFor {
     my $INTERNAL_SERVER_ERROR = "500";
     my $SERVICE_UNAVAILABLE = "503";
     
-    my ($json_parser, $ticket, $remote_ip, $requested_resource, $resource_type, $ticket_id, $LOGHANDLE) = @_;
+    my ($json_parser,
+        $ticket,
+        $remote_ip,
+        $requested_resource,
+        $resource_type,
+        $resource_param,
+        $ticket_id,
+        $ignored_resource_pattern,
+        $LOGHANDLE) = @_;
 
     if (!defined $json_parser) {
         print STDERR "no json\n";
@@ -133,15 +141,38 @@ sub returnStatusCodeFor {
 	return $BAD_MEDIA_TYPE;
     }
 
+    if (not (defined $ignored_resource_pattern and $resource_param =~ /$ignored_resource_pattern/)) {
+        logRequest($json_ticket->{userAttributes},
+                   $requested_resource,
+                   $resource_type,
+                   $remote_ip,
+                   $ticket_id,
+                   $json_parser,
+                   $LOGHANDLE);
+    }
+
+    # -- Nothing left to do. We're good.
+    
+    return $OK;
+}
+
+sub logRequest {
     # -- Log information for statistics
 
-    my $now_string = time();
+    my ($user_attributes,
+        $requested_resource,
+        $resource_type,
+        $remote_ip,
+        $ticket_id,
+        $json_parser,
+        $LOGHANDLE) = @_;
+
     my $statisticsMap = {
-        'userAttributes' => $json_ticket->{userAttributes},
+        'userAttributes' => $user_attributes,
         'resource_id' => $requested_resource,
         'resource_type' => $resource_type,
         'remote_ip' => $remote_ip,
-        'dateTime' => $now_string,
+        'dateTime' => time(),
         'ticket_id' => $ticket_id,
     };
 
@@ -151,9 +182,6 @@ sub returnStatusCodeFor {
     print $LOGHANDLE localtime() . ": $statisticsLine\n";
     flock($LOGHANDLE, Fcntl::LOCK_UN);
 
-    # -- Nothing left to do. We're good.
-    
-    return $OK;
 }
 
 1;
