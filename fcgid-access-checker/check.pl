@@ -99,7 +99,7 @@ while (my $q = CGI::Fast->new) {
                                                        $remote_ip,
                                                        $resource_id,
                                                        $resource_type,
-                                                       $resource_param,
+                                                       $resource_uuid_source,
                                                        $ticket_id,
                                                        $ignored_resource_pattern,
                                                        $STATISTICSHANDLE);
