@@ -49,7 +49,7 @@ my $resource_param = $cfg->param("resource_param") or die "no resource_param ('.
 
 my $statisticsFile = $cfg ->param("statistics_file") or die "no statistics_file";
 
-my $ignored_resource_pattern = $cfg ->param("ignored_resource_pattern");
+my $ignored_resource_pattern = $cfg ->param("ignored_resource_pattern") or "";
 
 ### -- Prepare data structures
 

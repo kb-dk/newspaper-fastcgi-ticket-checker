@@ -61,6 +61,16 @@ sub returnStatusCodeFor {
         return $INTERNAL_SERVER_ERROR;
     }
 
+    if (!defined $resource_param) {
+        print STDERR "no resource_param\n";
+        return $INTERNAL_SERVER_ERROR;
+    }
+
+    if (!defined $ticket_id) {
+        print STDERR "no ticket id\n";
+        return $INTERNAL_SERVER_ERROR;
+    }
+
     if (!defined $LOGHANDLE) {
         print STDERR "no logging file handle\n";
         return $INTERNAL_SERVER_ERROR;
@@ -141,7 +151,7 @@ sub returnStatusCodeFor {
 	return $BAD_MEDIA_TYPE;
     }
 
-    if (not (defined $ignored_resource_pattern and $resource_param =~ /$ignored_resource_pattern/)) {
+    if (not (length $ignored_resource_pattern and $resource_param =~ /$ignored_resource_pattern/)) {
         logRequest($json_ticket->{userAttributes},
                    $requested_resource,
                    $resource_type,
