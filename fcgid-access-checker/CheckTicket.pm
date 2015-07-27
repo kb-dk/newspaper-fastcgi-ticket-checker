@@ -9,6 +9,10 @@ use Fcntl qw<LOCK_EX LOCK_UN>;
 
 package CheckTicket;
 
+#This method does a lot more than it says on the tin.
+#Yes, It parses the ticket, validates this, logs the usage to the usage logs if relevant (see ignored resource pattern)
+# and then returns the appropriate status code
+# Please refactor on next vist
 sub returnStatusCodeFor {
     #
     # Code is deliberately unoptimized to keep it as simple as possible!
@@ -151,7 +155,13 @@ sub returnStatusCodeFor {
 	return $BAD_MEDIA_TYPE;
     }
 
-    if (not (length $ignored_resource_pattern and $resource_param =~ /$ignored_resource_pattern/)) {
+    #skip "not" og lav en if-blok med en forklaring af hvad du gør, og så sæt logrequest i elseblokken.
+
+    if (length $ignored_resource_pattern and $resource_param =~ /$ignored_resource_pattern/) {
+        #if the ignored resource pattern is defined and the resource param matches, do NOT log this.
+        # The ignored resource pattern is meant to filter out the dzi requests from the jpeg requests. DZI only
+        #get the image dimensions, and should not count as an actual request to view the image
+    } else {
         logRequest($json_ticket->{userAttributes},
                    $requested_resource,
                    $resource_type,
@@ -177,12 +187,13 @@ sub logRequest {
         $json_parser,
         $LOGHANDLE) = @_;
 
+    my $now_string = time();
     my $statisticsMap = {
         'userAttributes' => $user_attributes,
         'resource_id' => $requested_resource,
         'resource_type' => $resource_type,
         'remote_ip' => $remote_ip,
-        'dateTime' => time(),
+        'dateTime' => $now_string,
         'ticket_id' => $ticket_id,
     };
 

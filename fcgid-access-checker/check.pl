@@ -94,6 +94,9 @@ while (my $q = CGI::Fast->new) {
             my $remote_ip = $q->remote_addr();
 
             my $ticket_content = $memd -> get($ticket_id);
+
+            #This method does a lot more than what it says on the tin. We decided not to refactor at this time, but
+            # please do so if adding even a little bit more functionality
             $status = CheckTicket::returnStatusCodeFor($json,
                                                        $ticket_content,
                                                        $remote_ip,
