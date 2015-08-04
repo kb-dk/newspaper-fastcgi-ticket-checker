@@ -53,7 +53,7 @@ my $ignored_resource_pattern = $cfg ->param("ignored_resource_pattern") or "";
 
 ### -- Prepare data structures
 
-my $memd = new Cache::Memcached {
+my $memcached_server = new Cache::Memcached {
 # HACK!  See above.
 #    'servers' => @memcached_servers,
     'servers' => [$memcached_servers],
@@ -61,7 +61,7 @@ my $memd = new Cache::Memcached {
     'compress_threshold' => 10_000,
 };
 
-my $json = JSON->new->allow_nonref;
+my $json_parser = JSON->new->allow_nonref;
 
 my $ticket_uuid_regexp = qr/$ticket_uuid_pattern/;
 my $resource_uuid_regexp = qr/$resource_uuid_pattern/;
@@ -71,7 +71,7 @@ open(my $STATISTICSHANDLE, "+>>", $statisticsFile) or die "open statistics file 
 
 ### -- go
 
-print STDERR "access checker ready using $config_file.  memcached servers=$memcached_servers.\n";
+print STDOUT "access checker ready using $config_file.  memcached servers=$memcached_servers.\n";
 
 while (my $q = CGI::Fast->new) {
 
@@ -93,11 +93,11 @@ while (my $q = CGI::Fast->new) {
 
             my $remote_ip = $q->remote_addr();
 
-            my $ticket_content = $memd -> get($ticket_id);
+            my $ticket_content = $memcached_server -> get($ticket_id);
 
             #This method does a lot more than what it says on the tin. We decided not to refactor at this time, but
             # please do so if adding even a little bit more functionality
-            $status = CheckTicket::returnStatusCodeFor($json,
+            $status = CheckTicket::returnStatusCodeFor($json_parser,
                                                        $ticket_content,
                                                        $remote_ip,
                                                        $resource_id,
