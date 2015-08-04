@@ -28,13 +28,13 @@ use lib $directory;
 
 use CheckTicket;
 
-### -- 
+### --
 
 my $cfg = new Config::Simple($config_file) or die "No config file: $config_file";
 
 
 
-### -- Establish configuration 
+### -- Establish configuration
 
 # There are some very delicate issues with having multiple servers.  USE ONLY ONE FOR NOW.
 my $memcached_servers = $cfg->param("memcached_servers") or die "no memcached_servers";
@@ -71,12 +71,12 @@ open(my $STATISTICSHANDLE, "+>>", $statisticsFile) or die "open statistics file 
 
 ### -- go
 
-print STDOUT "access checker ready using $config_file.  memcached servers=$memcached_servers.\n";
+print STDERR "access checker ready using $config_file.  memcached servers=$memcached_servers.\n";
 
 while (my $q = CGI::Fast->new) {
 
     my $status = "400"; # BAD REQUEST
-    
+
     # http://perldoc.perl.org/CGI.html#OBTAINING-THE-SCRIPT'S-URL
     # "-absolute" gives "/path/to/script.cgi"
 
