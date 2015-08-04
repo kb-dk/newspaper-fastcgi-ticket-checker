@@ -35,6 +35,7 @@ Notes:
 
 /tra 2014-11-05
 
+
 Code now works.
 
 tests in test/
@@ -46,15 +47,31 @@ quite stable and has good modules for this.
 
 /tra 2014-12-01
 
+
 Preparing for production.
 
-Use 
+Use
 http://achernar:7880/fedora/risearch?type=triples&lang=spo&format=N-Triples&limit=&dt=on&stream=on&query=*+*+%3Cinfo%3Afedora%2Fdoms%3AContentModel_EditionPage%3E&template=
 to ask DOMS for test uuids.
 
 /tra 2014-12-09
 
+
 Statistics data logging added by TRA and ABR.  Processed by
 newspaper-usage-statistics.
 
 /tra 2015-06-19
+
+
+The code requires the module JSON.pm which is installed via CPAN. Do the
+following to install CPAN on your Linux or OSX machine (tested with OSX):
+In a shell, give the command 'cpan'. Follow the instructions, i.e. just press
+enter whenever it suggests something - when asked about manual or automatic
+configuration, choose automatic. When it is done, you are in the CPAN shell.
+Update CPAN by typing:  install Bundle::CPAN
+(This takes a while)
+Finally you can install the JSON.pm module from the cpan prompt by typing:
+install JSON
+
+/jrg 2015-08-03
+
