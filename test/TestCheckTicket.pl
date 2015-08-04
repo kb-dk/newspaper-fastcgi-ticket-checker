@@ -17,19 +17,19 @@ my $json = JSON->new->allow_nonref;
 
 my $remote_ip="172.18.229.232";
 
-my $requested_resource1 = "0c6a18b8-a3c4-4dfc-9ece-1d7c8ffc908c";
+my $requested_newspaper_page1 = "0c6a18b8-a3c4-4dfc-9ece-1d7c8ffc908c";
 
-my $requested_resource2 = "8eaca37b-c3a9-4afd-b8ed-9f7f86d5e82d";
+my $requested_newspaper_page2 = "8eaca37b-c3a9-4afd-b8ed-9f7f86d5e82d";
 
-my $requested_resource3 = "853a0b31-c944-44a5-8e42-bc9b5bc697be";
+my $requested_radio_tv_resource = "853a0b31-c944-44a5-8e42-bc9b5bc697be";
 
 my $resource_type = "Stream";
 
 my $resource_param1 = "DeepZoom=/net/zone1.isilon.sblokalnet/ifs/archive/"
-	. "avis-show-devel/symlinks/0/c/6/a/$requested_resource1.jp2.dzi";
+	. "avis-show-devel/symlinks/0/c/6/a/$requested_newspaper_page1.jp2.dzi";
 
 my $resource_param2 = "DeepZoom=/net/zone1.isilon.sblokalnet/ifs/archive/"
-	. "avis-show-devel/symlinks/8/e/a/c/$requested_resource2.jp2.dzi";
+	. "avis-show-devel/symlinks/8/e/a/c/$requested_newspaper_page2.jp2.dzi";
 
 my $ticket_id = "dcf8246d-8097-4e84-9e8c-eb4a37858115";
 
@@ -39,9 +39,9 @@ my $ticket = '{"id":"' . $ticket_id
 	. '","type":"' . $resource_type
 	. '","ipAddress":"' . $remote_ip
 	. '","resources":['
-		. '"doms_radioTVCollection:uuid:' . $requested_resource3 . '",'
-		. '"doms_newspaperCollection:uuid:' . $requested_resource1 . '",'
-		. '"doms_newspaperCollection:uuid:' . $requested_resource2
+		. '"doms_radioTVCollection:uuid:' . $requested_radio_tv_resource . '",'
+		. '"doms_newspaperCollection:uuid:' . $requested_newspaper_page1 . '",'
+		. '"doms_newspaperCollection:uuid:' . $requested_newspaper_page2
 	. '"],'
     . '"userAttributes":{"SBIPRoleMapper":["inhouse"]},"properties":null}';
 
@@ -51,6 +51,7 @@ my $disallowed_resource = 'aaaaaab8-a3c4-4dfc-9ece-1d7c8ffc908c';
 my $statisticsFileContent = "";
 my $STDERR_output = "";
 
+# Print to string
 open SH, ">", \$statisticsFileContent or die $!;
 
 
@@ -79,7 +80,7 @@ is(CheckTicket::returnStatusCodeFor(), "500", "no args");
 is(CheckTicket::returnStatusCodeFor($json,
 		'{"a": "b"',
 		$remote_ip,
-		$requested_resource2,
+		$requested_newspaper_page2,
 		$resource_type,
 		undef,
 		undef,
@@ -108,7 +109,7 @@ is(CheckTicket::returnStatusCodeFor($json,
 is(CheckTicket::returnStatusCodeFor($json,
 		$ticket,
 		"",
-		$requested_resource1,
+		$requested_newspaper_page1,
 		$resource_type,
 		$resource_param1,
 		$ticket_id,
@@ -160,7 +161,7 @@ is(CheckTicket::returnStatusCodeFor($json,
 is(CheckTicket::returnStatusCodeFor($json,
 		$ticket,
 		$remote_ip,
-		$requested_resource3,
+		$requested_radio_tv_resource,
 		"NotStream",
 		$resource_param1,
 		$ticket_id,
@@ -173,7 +174,7 @@ is(CheckTicket::returnStatusCodeFor($json,
 is(CheckTicket::returnStatusCodeFor($json,
 		$ticket,
 		$remote_ip,
-		$requested_resource1,
+		$requested_newspaper_page1,
 		$resource_type,
 		$resource_param1,
 		$ticket_id,
