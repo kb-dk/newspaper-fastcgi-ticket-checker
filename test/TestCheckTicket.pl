@@ -9,7 +9,7 @@ use strict;
 use CheckTicket 'returnStatusCodeFor';
 use JSON;
 
-use Test::More tests => 10;
+use Test::More tests => 15;
 
 my $json = JSON->new->allow_nonref;
 
@@ -29,7 +29,7 @@ my $resource_param1 = "DeepZoom=/net/zone1.isilon.sblokalnet/ifs/archive/"
 	. "avis-show-devel/symlinks/0/c/6/a/$requested_newspaper_page1.jp2.dzi";
 
 my $resource_param2 = "DeepZoom=/net/zone1.isilon.sblokalnet/ifs/archive/"
-	. "avis-show-devel/symlinks/8/e/a/c/$requested_newspaper_page2.jp2.dzi";
+	. "avis-show-devel/symlinks/8/e/a/c/$requested_newspaper_page2.jp2";
 
 my $ticket_id = "dcf8246d-8097-4e84-9e8c-eb4a37858115";
 
@@ -170,6 +170,33 @@ is(CheckTicket::returnStatusCodeFor($json,
 	"415",
 	"wrong type, resource 3");
 
+
+# Test "empty param resource id": Check that empty param => a 500
+is(CheckTicket::returnStatusCodeFor($json,
+		$ticket,
+		$remote_ip,
+		$requested_newspaper_page1,
+		$resource_type,
+		undef,
+		$ticket_id,
+		$ignored_resource_pattern,
+		*SH),
+	"500",
+	"empty param resource id");
+
+# Test "empty param ticket id": Check that empty param => a 500
+is(CheckTicket::returnStatusCodeFor($json,
+		$ticket,
+		$remote_ip,
+		$requested_newspaper_page1,
+		$resource_type,
+		$resource_param1,
+		undef,
+		$ignored_resource_pattern,
+		*SH),
+	"500",
+	"empty param ticket id");
+
 # Test "all correct, resource 1": Check that bad resource => a 403
 is(CheckTicket::returnStatusCodeFor($json,
 		$ticket,
@@ -182,6 +209,34 @@ is(CheckTicket::returnStatusCodeFor($json,
 		*SH),
 	"200",
 	"all correct, resource 1");
+
+is($statisticsFileContent, "", "No statistics should be logged, since resource is matched by ignore pattern");
+
+# Test "all correct, resource 2": Check that bad resource => a 403
+is(CheckTicket::returnStatusCodeFor($json,
+		$ticket,
+		$remote_ip,
+		$requested_newspaper_page1,
+		$resource_type,
+		$resource_param2,
+		$ticket_id,
+		$ignored_resource_pattern,
+		*SH),
+	"200",
+	"all correct, resource 2");
+
+my $found = $json->decode((split /: /, $statisticsFileContent, 2)[1]);
+delete $found->{"dateTime"};
+
+my $expected = {
+	'ticket_id'      => 'dcf8246d-8097-4e84-9e8c-eb4a37858115',
+	'userAttributes' => {"SBIPRoleMapper" => ["inhouse"]},
+	"resource_id"    => "0c6a18b8-a3c4-4dfc-9ece-1d7c8ffc908c",
+	"remote_ip"      => "172.18.229.232",
+	"resource_type"  => "Stream",
+};
+
+is_deeply($found, $expected, "Statistics should be logged");
 
 close(*SH); # for now we do not test the statistics or stderr logged.
 
