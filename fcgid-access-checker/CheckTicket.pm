@@ -155,8 +155,6 @@ sub returnStatusCodeFor {
 	return $BAD_MEDIA_TYPE;
     }
 
-    #skip "not" og lav en if-blok med en forklaring af hvad du gør, og så sæt logrequest i elseblokken.
-
     if (length $ignored_resource_pattern and $resource_param =~ /$ignored_resource_pattern/) {
         #if the ignored resource pattern is defined and the resource param matches, do NOT log this.
         # The ignored resource pattern is meant to filter out the dzi requests from the jpeg requests. DZI only
