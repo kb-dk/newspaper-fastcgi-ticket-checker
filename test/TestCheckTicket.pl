@@ -197,7 +197,7 @@ is(CheckTicket::returnStatusCodeFor($json,
 	"500",
 	"empty param ticket id");
 
-# Test "all correct, resource 1": Check that bad resource => a 403
+# Test "all correct, resource 1": Check that correct .dzi resource => a 200
 is(CheckTicket::returnStatusCodeFor($json,
 		$ticket,
 		$remote_ip,
@@ -212,7 +212,7 @@ is(CheckTicket::returnStatusCodeFor($json,
 
 is($statisticsFileContent, "", "No statistics should be logged, since resource is matched by ignore pattern");
 
-# Test "all correct, resource 2": Check that bad resource => a 403
+# Test "all correct, resource 2": Check that correct non-.dzi-resource => a 200
 is(CheckTicket::returnStatusCodeFor($json,
 		$ticket,
 		$remote_ip,
