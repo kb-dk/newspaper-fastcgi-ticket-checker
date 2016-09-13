@@ -9,6 +9,8 @@
 * New optional configuration file entry "ignored_resource_pattern"
   defines a regexp of ignored resources when logging statistics.
 
+* Remove temporary time logging
+
 2014-12-15:
 ====
 
