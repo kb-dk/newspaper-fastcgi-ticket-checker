@@ -1,9 +1,8 @@
 #!/usr/bin/perl
 
+use 5.010;
+
 use warnings;
-# For some reason the BEGIN-magic cause "use strict" to fail causing
-# Apache to consider the script broken.  Could not find quick solution.
-#use strict;
 use diagnostics;
 
 use CGI::Fast;
@@ -13,10 +12,10 @@ use IO::Handle;
 use JSON;
 use Time::HiRes;
 
-# http://learn.perl.org/faq/perlfaq8.html#How-do-I-add-the-directory-my-program-lives-in-to-the-module-library-search-path
+# Magic to derive directory of running script so we can tell Perl to look there.
 
 BEGIN {
-    # Magic to derive directory of running script so we can tell Perl to look there.
+    # http://learn.perl.org/faq/perlfaq8.html#How-do-I-add-the-directory-my-program-lives-in-to-the-module-library-search-path
     use File::Spec::Functions qw(rel2abs);
     use File::Basename qw(dirname basename);
     my $path = rel2abs($0);
@@ -49,13 +48,14 @@ my $resource_param = $cfg->param("resource_param") or die "no resource_param ('.
 
 my $statisticsFile = $cfg ->param("statistics_file") or die "no statistics_file";
 
-my $ignored_resource_pattern = $cfg ->param("ignored_resource_pattern") or "";
+my $ignored_resource_pattern = $cfg ->param("ignored_resource_pattern") // "";
 
 ### -- Prepare data structures
 
 my $memcached_server = new Cache::Memcached {
-    # HACK!  See above.
-    #    'servers' => @memcached_servers,
+    # Workaround.  TRA could not figure out how to get an array out of
+    # the configuration module.  So only one server supported for now.
+    # 'servers' => @memcached_servers,
     'servers' => [$memcached_servers],
 	'debug' => 0,
 	'compress_threshold' => 10_000,

@@ -9,10 +9,10 @@ use Fcntl qw<LOCK_EX LOCK_UN>;
 
 package CheckTicket;
 
-#This method does a lot more than it says on the tin.
-#Yes, It parses the ticket, validates this, logs the usage to the usage logs if relevant (see ignored resource pattern)
-# and then returns the appropriate status code
-# Please refactor on next vist
+# Parse the ticket, validates the ticket, logs the usage to the usage
+# logs if relevant (see ignored resource pattern) and then returns the
+# appropriate status code.
+
 sub logUsageStatisticsAndReturnStatusCodeFor {
     # Code is deliberately unoptimized to keep it as simple as possible!
     # Please don't improve without profiling information proving it to be necessary.
