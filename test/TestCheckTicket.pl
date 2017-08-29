@@ -6,7 +6,7 @@ use lib "../fcgid-access-checker";
 use warnings;
 use strict;
 
-use CheckTicket 'returnStatusCodeFor';
+use CheckTicket 'logUsageStatisticsAndReturnStatusCodeFor';
 use JSON;
 
 use Test::More tests => 15;
@@ -55,7 +55,7 @@ my $STDERR_output = "";
 open SH, ">", \$statisticsFileContent or die $!;
 
 
-# The parameters for CheckTicket::returnStatusCodeFor are:
+# The parameters for CheckTicket::logUsageStatisticsAndReturnStatusCodeFor are:
 #    $json_parser,
 #    $ticket,
 #    $remote_ip,
@@ -74,10 +74,10 @@ is($json->decode('{"a": "b"}')->{a}, "b", "json decoding");
 # -- first check robustness against bad data
 
 # Test "no args": Check that a call with no args gives an error 500
-is(CheckTicket::returnStatusCodeFor(), "500", "no args");
+is(CheckTicket::logUsageStatisticsAndReturnStatusCodeFor(), "500", "no args");
 
 # Test "bad json": Check that invalid JSON gives an error 500
-is(CheckTicket::returnStatusCodeFor($json,
+is(CheckTicket::logUsageStatisticsAndReturnStatusCodeFor($json,
 		'{"a": "b"',
 		$remote_ip,
 		$requested_newspaper_page2,
@@ -93,7 +93,7 @@ is(CheckTicket::returnStatusCodeFor($json,
 # -- now have a go at a real ticket.
 
 # Test "everything is wrong": Check that many missing parameters => a 403
-is(CheckTicket::returnStatusCodeFor($json,
+is(CheckTicket::logUsageStatisticsAndReturnStatusCodeFor($json,
 		$ticket,
 		"",
 		"",
@@ -106,7 +106,7 @@ is(CheckTicket::returnStatusCodeFor($json,
 	"everything is wrong");
 
 # Test "wrong ip": Check that missing remote ip => a 403
-is(CheckTicket::returnStatusCodeFor($json,
+is(CheckTicket::logUsageStatisticsAndReturnStatusCodeFor($json,
 		$ticket,
 		"",
 		$requested_newspaper_page1,
@@ -119,7 +119,7 @@ is(CheckTicket::returnStatusCodeFor($json,
 	"wrong ip");
 
 # Test "wrong resource + type": Check that bad resource and type => a 403
-is(CheckTicket::returnStatusCodeFor($json,
+is(CheckTicket::logUsageStatisticsAndReturnStatusCodeFor($json,
 		$ticket,
 		$remote_ip,
 		"wrong ressource",
@@ -132,7 +132,7 @@ is(CheckTicket::returnStatusCodeFor($json,
 	"wrong resource + type");
 
 # Test "wrong resource": Check that bad resource => a 403
-is(CheckTicket::returnStatusCodeFor($json,
+is(CheckTicket::logUsageStatisticsAndReturnStatusCodeFor($json,
 		$ticket,
 		$remote_ip,
 		"wrong ressource",
@@ -145,7 +145,7 @@ is(CheckTicket::returnStatusCodeFor($json,
 	"wrong resource");
 
 # Test "wrong type, wrong resource": Check that non-matching resource => a 403
-is(CheckTicket::returnStatusCodeFor($json,
+is(CheckTicket::logUsageStatisticsAndReturnStatusCodeFor($json,
 		$ticket,
 		$remote_ip,
 		$disallowed_resource,
@@ -158,7 +158,7 @@ is(CheckTicket::returnStatusCodeFor($json,
 	"wrong type, wrong resource");
 
 # Test "wrong type, resource 3": Check that non-allowed resource type => a 415
-is(CheckTicket::returnStatusCodeFor($json,
+is(CheckTicket::logUsageStatisticsAndReturnStatusCodeFor($json,
 		$ticket,
 		$remote_ip,
 		$requested_radio_tv_resource,
@@ -172,7 +172,7 @@ is(CheckTicket::returnStatusCodeFor($json,
 
 
 # Test "empty param resource id": Check that empty param => a 500
-is(CheckTicket::returnStatusCodeFor($json,
+is(CheckTicket::logUsageStatisticsAndReturnStatusCodeFor($json,
 		$ticket,
 		$remote_ip,
 		$requested_newspaper_page1,
@@ -185,7 +185,7 @@ is(CheckTicket::returnStatusCodeFor($json,
 	"empty param resource id");
 
 # Test "empty param ticket id": Check that empty param => a 500
-is(CheckTicket::returnStatusCodeFor($json,
+is(CheckTicket::logUsageStatisticsAndReturnStatusCodeFor($json,
 		$ticket,
 		$remote_ip,
 		$requested_newspaper_page1,
@@ -198,7 +198,7 @@ is(CheckTicket::returnStatusCodeFor($json,
 	"empty param ticket id");
 
 # Test "all correct, resource 1": Check that correct .dzi resource => a 200
-is(CheckTicket::returnStatusCodeFor($json,
+is(CheckTicket::logUsageStatisticsAndReturnStatusCodeFor($json,
 		$ticket,
 		$remote_ip,
 		$requested_newspaper_page1,
@@ -213,7 +213,7 @@ is(CheckTicket::returnStatusCodeFor($json,
 is($statisticsFileContent, "", "No statistics should be logged, since resource is matched by ignore pattern");
 
 # Test "all correct, resource 2": Check that correct non-.dzi-resource => a 200
-is(CheckTicket::returnStatusCodeFor($json,
+is(CheckTicket::logUsageStatisticsAndReturnStatusCodeFor($json,
 		$ticket,
 		$remote_ip,
 		$requested_newspaper_page1,

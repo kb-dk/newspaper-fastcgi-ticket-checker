@@ -54,11 +54,11 @@ my $ignored_resource_pattern = $cfg ->param("ignored_resource_pattern") or "";
 ### -- Prepare data structures
 
 my $memcached_server = new Cache::Memcached {
-# HACK!  See above.
-#    'servers' => @memcached_servers,
+    # HACK!  See above.
+    #    'servers' => @memcached_servers,
     'servers' => [$memcached_servers],
-    'debug' => 0,
-    'compress_threshold' => 10_000,
+	'debug' => 0,
+	'compress_threshold' => 10_000,
 };
 
 my $json_parser = JSON->new->allow_nonref;
@@ -69,18 +69,18 @@ my $resource_uuid_regexp = qr/$resource_uuid_pattern/;
 # http://docstore.mik.ua/orelly/perl/cookbook/ch07_02.htm
 open(my $STATISTICSHANDLE, "+>>", $statisticsFile) or die "open statistics file $statisticsFile\n";
 
-### -- go
+### -- Go
 
 print STDERR "access checker ready using $config_file.  memcached servers=$memcached_servers.\n";
 
-while (my $q = CGI::Fast->new) {
+while (my $q = CGI::Fast->new) { # as long as Apache sends them
 
     my $status = "400"; # BAD REQUEST
 
     # http://perldoc.perl.org/CGI.html#OBTAINING-THE-SCRIPT'S-URL
     # "-absolute" gives "/path/to/script.cgi"
 
-    # "." is dirty hack as Config::Simple returns the empty string as an empty array
+    # "." is a workaround as Config::Simple returns the empty string as an empty array
     my $ticket_uuid_source = ($ticket_param eq ".") ? $q->url(-absolute=>1) : $q->param($ticket_param);
     if (defined $ticket_uuid_source) {
         $ticket_uuid_source =~ /$ticket_uuid_regexp/; # create $1
@@ -95,17 +95,15 @@ while (my $q = CGI::Fast->new) {
 
             my $ticket_content = $memcached_server -> get($ticket_id);
 
-            #This method does a lot more than what it says on the tin. We decided not to refactor at this time, but
-            # please do so if adding even a little bit more functionality
-            $status = CheckTicket::returnStatusCodeFor($json_parser,
-                                                       $ticket_content,
-                                                       $remote_ip,
-                                                       $resource_id,
-                                                       $resource_type,
-                                                       $resource_uuid_source,
-                                                       $ticket_id,
-                                                       $ignored_resource_pattern,
-                                                       $STATISTICSHANDLE);
+            $status = CheckTicket::logUsageStatisticsAndReturnStatusCodeFor($json_parser,
+									    $ticket_content,
+									    $remote_ip,
+									    $resource_id,
+									    $resource_type,
+									    $resource_uuid_source,
+									    $ticket_id,
+									    $ignored_resource_pattern,
+									    $STATISTICSHANDLE);
         }
     }
     print("Status: $status\n\n");

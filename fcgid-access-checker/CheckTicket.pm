@@ -13,8 +13,7 @@ package CheckTicket;
 #Yes, It parses the ticket, validates this, logs the usage to the usage logs if relevant (see ignored resource pattern)
 # and then returns the appropriate status code
 # Please refactor on next vist
-sub returnStatusCodeFor {
-    #
+sub logUsageStatisticsAndReturnStatusCodeFor {
     # Code is deliberately unoptimized to keep it as simple as possible!
     # Please don't improve without profiling information proving it to be necessary.
 
@@ -123,7 +122,8 @@ sub returnStatusCodeFor {
 
     if (@resources) {
 
-        # Fail if the requested resource uuid is not one of the resources described in the ticket.
+        # Fail if the requested resource uuid is not one of the
+        # resources described in the ticket.
         # doms_radioTVCollection:uuid:853a0b31-c944-44a5-8e42-bc9b5bc697be
 
         my $found = $FALSE;
@@ -156,17 +156,30 @@ sub returnStatusCodeFor {
     }
 
     if (length $ignored_resource_pattern and $resource_param =~ /$ignored_resource_pattern/) {
-        #if the ignored resource pattern is defined and the resource param matches, do NOT log this.
-        # The ignored resource pattern is meant to filter out the dzi requests from the jpeg requests. DZI only
-        #get the image dimensions, and should not count as an actual request to view the image
+        # If the ignored resource pattern is defined and the resource
+        # param matches, do NOT log this.  The ignored resource
+        # pattern is meant to filter out the dzi requests from the
+        # jpeg requests. DZI only get the image dimensions, and should
+        # not count as an actual request to view the image
     } else {
-        logRequest($json_ticket->{userAttributes},
-                   $requested_resource,
-                   $resource_type,
-                   $remote_ip,
-                   $ticket_id,
-                   $json_parser,
-                   $LOGHANDLE);
+
+        # -- Log information for statistics
+
+        my $now_string = time();
+        my $statisticsMap = {
+            'userAttributes' => $json_ticket->{userAttributes},
+            'resource_id' => $requested_resource,
+            'resource_type' => $resource_type,
+            'remote_ip' => $remote_ip,
+            'dateTime' => $now_string,
+            'ticket_id' => $ticket_id,
+        };
+
+        my $statisticsLine = $json_parser->encode($statisticsMap);
+
+        flock($LOGHANDLE, Fcntl::LOCK_EX);
+        print $LOGHANDLE localtime() . ": $statisticsLine\n";
+        flock($LOGHANDLE, Fcntl::LOCK_UN);
     }
 
     # -- Nothing left to do. We're good.
@@ -174,33 +187,4 @@ sub returnStatusCodeFor {
     return $OK;
 }
 
-sub logRequest {
-    # -- Log information for statistics
-
-    my ($user_attributes,
-        $requested_resource,
-        $resource_type,
-        $remote_ip,
-        $ticket_id,
-        $json_parser,
-        $LOGHANDLE) = @_;
-
-    my $now_string = time();
-    my $statisticsMap = {
-        'userAttributes' => $user_attributes,
-        'resource_id' => $requested_resource,
-        'resource_type' => $resource_type,
-        'remote_ip' => $remote_ip,
-        'dateTime' => $now_string,
-        'ticket_id' => $ticket_id,
-    };
-
-    my $statisticsLine = $json_parser->encode($statisticsMap);
-
-    flock($LOGHANDLE, Fcntl::LOCK_EX);
-    print $LOGHANDLE localtime() . ": $statisticsLine\n";
-    flock($LOGHANDLE, Fcntl::LOCK_UN);
-
-}
-
-1;
+1; # exit code needed for module.

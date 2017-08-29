@@ -8,22 +8,28 @@ given request corresponds to the credentials stored in JSON format in
 memcached.
 
 Development is expected to happen on achernar.  When check.pl or
-CheckTicket.pm is updated run "sudo /usr/local/sbin/restart_httpd.sh"
-to reload the script, and then run "perf/test-page.sh" which expects
-one or more lines containing a DOMS uuid on stdin, does the proper
-voodoo, and then downloads the corresponding assets to the "perf/tmp"
-folder.  As of 2015-06-19 this is hardcoded to the test environment
-including achernar.
+CheckTicket.pm is updated run 
+
+    sudo /usr/local/sbin/restart_httpd.sh
 
 
-Under Ubuntu 14.10 adapt /etc/apache2/apache2.conf similarly to
+to reload the script, and then run 
 
-  <Directory /var/www/>
-	Options Indexes FollowSymLinks
-	AllowOverride None
-	FcgidAccessChecker /home/ravn/git/newspaper-fastcgi-ticket-checker/fcgid-access-checker/check.pl
-	Require all granted
-  </Directory>
+    perf/test-page.sh
+     
+which expects one or more lines containing a DOMS uuid on stdin, does
+the proper voodoo, and then downloads the corresponding assets to the
+"perf/tmp" folder.  As of 2015-06-19 this is hardcoded to the test
+environment including achernar.
+
+Under Ubuntu 14.10 adapt `/etc/apache2/apache2.conf` similarly to
+
+    <Directory /var/www/>
+  	    Options Indexes FollowSymLinks
+  	    AllowOverride None
+    	FcgidAccessChecker /home/ravn/git/newspaper-fastcgi-ticket-checker/fcgid-access-checker/check.pl
+	    Require all granted
+    </Directory>
 
 and ensure that the appropriate module is installed and activated.
 
@@ -74,4 +80,18 @@ Finally you can install the JSON.pm module from the cpan prompt by typing:
 install JSON
 
 /jrg 2015-08-03
+
+Perl 5.16 in stage complains about some things that Perl 5.10 on devel doesn't,
+so fixing that and doing some spring cleaning in the process and the pending
+refactoring.
+
+If for some reason a system is missing a dependency install them (after updating
+CPAN as described above) with
+
+     cpan -i Cache::Memcached Config::Simple JSON
+
+(add sudo if for some reason cpan does not want to make a user specific installation)
+
+    
+/tra 2017-08-29
 
