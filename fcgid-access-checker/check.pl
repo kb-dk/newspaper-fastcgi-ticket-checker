@@ -82,6 +82,7 @@ while (my $q = CGI::Fast->new) { # as long as Apache sends them
 
     # "." is a workaround as Config::Simple returns the empty string as an empty array
     my $ticket_uuid_source = ($ticket_param eq ".") ? $q->url(-absolute=>1) : $q->param($ticket_param);
+
     if (defined $ticket_uuid_source) {
         $ticket_uuid_source =~ /$ticket_uuid_regexp/; # create $1
         my $ticket_id = $1;
