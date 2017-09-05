@@ -1,3 +1,17 @@
+0.4 (2017-09-05)
+===
+
+Incorrect usage of "or" triggered by Perl 5.16 in stage
+changed to "fail if not specified" instead of "use empty default".
+
+
+0.3 (2017-08-31)
+===
+
+Incorrect usage of "or" triggered by Perl 5.16 in stage changed to
+intended meaning (and minor refactoring)
+
+
 2016-09-08:
 ====
 

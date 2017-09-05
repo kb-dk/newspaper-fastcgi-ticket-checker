@@ -7,9 +7,7 @@ Usage:
 	   
 * Resolve the content for each uuid:
 
-  	  sh filename-to-content.pl <files.txt >content.txt
-
-  (TODO: Make uuid prefix configurable, for now edit the script)
+  	  perl filename-to-content.pl doms_aviser_edition:uuid: <files.txt >content.txt
 
   
 * Create time restricted urls with valid tickets:
@@ -21,9 +19,8 @@ Usage:
   
 * Download all urls provided in script:
   
-	wget -q -i ../edition-urls.txt 
-
-  (you most likely want to do this in a separate directory).
+  
+     (mkdir -p download; cd download; wget -q -i ../urls.txt) 
 
   Note:  wget is single threaded.  The file names include ?ticket=...
 
@@ -34,7 +31,7 @@ Tips:
 
 	"/usr/bin/time -p command" prints out time taken to run command.
 
-	"... | pv -l > outputfile" prints out lines per second in pipe.
+	"... | pv -l > outputfile" prints out lines per second in pipe if installed.
 
 
 /tra 2014-12-02
