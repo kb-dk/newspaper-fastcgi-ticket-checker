@@ -1,15 +1,18 @@
-0.4 (2017-09-05)
+0.3.1
 ===
 
-Incorrect usage of "or" triggered by Perl 5.16 in stage
-changed to "fail if not specified" instead of "use empty default".
+"ignored_resource_pattern" is now a required configuration parameter
+(which defines what to log to the usage log).
 
+Added create-deployment-targz.sh which does not have a leading 
+
+/tra 2017-09-11
 
 0.3 (2017-08-31)
 ===
 
 Incorrect usage of "or" triggered by Perl 5.16 in stage changed to
-intended meaning (and minor refactoring)
+intended meaning (and minor refactoring).
 
 
 2016-09-08:
