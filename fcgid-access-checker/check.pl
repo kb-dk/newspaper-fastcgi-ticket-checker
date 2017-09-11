@@ -3,7 +3,7 @@
 use 5.010;
 
 use warnings;
-use diagnostics;
+# use diagnostics; # not present in docker image.
 
 use CGI::Fast;
 use Cache::Memcached;

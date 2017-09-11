@@ -7,6 +7,8 @@ services:
     - "8080:80"
     links: [memcached]
 #    image: httpd:2.4-alpine
+    volumes:
+    - ./fcgid-access-checker:/fcgid-access-checker
     
   memcached:
     image: memcached:alpine

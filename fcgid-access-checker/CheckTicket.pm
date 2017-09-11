@@ -4,7 +4,7 @@
 
 use warnings;
 use strict;
-use diagnostics;
+# use diagnostics; # not present in docker image.
 use Fcntl qw<LOCK_EX LOCK_UN>;
 
 package CheckTicket;
