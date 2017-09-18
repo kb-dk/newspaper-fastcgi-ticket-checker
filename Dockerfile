@@ -1,46 +1,27 @@
-FROM httpd:2.4-alpine
+FROM centos/httpd
 
+MAINTAINER tra@kb.dk
 
-# -- adapted from https://gitlab.com/jdoubleu/docker-apache-fcgid/blob/master/Dockerfile
-# Install some dependencies needed for build
+# Add internal repo
+RUN rpm -ivh https://deimos.statsbiblioteket.dk/mrepo/centos7-x86_64/RPMS.sbtools/sb-repotools-0.4-12.el7.sb.noarch.rpm
+RUN rpm -ivh https://deimos.statsbiblioteket.dk/mrepo/centos7-x86_64/RPMS.sbtools/yum-config-sb-centos-0.4-12.el7.sb.noarch.rpm
+# Cannot disable others, as epel-release is needed.
+# RUN sed -i '/^gpgkey/a\enabled=0' /etc/yum.repos.d/CentOS-Base.repo
 
-RUN apk add --no-cache --virtual .build-deps \
-    ca-certificates \
-    gcc \
-    gnupg \
-    libc-dev \
-    make \
-    pcre-dev \
-    perl-dev \
-    tar
+# Now load the needed packages.
 
-# Required Perl modules.  Could not get "diagnostics" to work.
-RUN echo yes | perl -MCPAN -e 'CPAN::Shell->install("FCGI","Cache::Memcached","Config::Simple","JSON", "CGI:Fast")'
+RUN yum -y install epel-release
+RUN yum -y install autoconf automake krb5-workstation krb5-devel git httpd httpd-devel gcc fcgi-perl bzip2 perl-JSON perl-Config-Simple perl-Cache-Memcached perl-CGI mod_fcgid
 
-COPY docker/mod_fcgid-*.tar.bz2 /tmp
+# Add our prepared and protected folder to Apache.
 
+COPY docker/newspaper-fcgi.conf /etc/httpd/conf.d
 
-RUN set -e \
-  && cd /tmp \
-  && mkdir -p /tmp/src \
-  && tar xvjf mod_* -C src --strip-components=1 \
-  && cd /tmp/src/ \
-  \
-  && ./configure.apxs \
-  && make \
-  && make install \
-  \
-  && cd .. \
-  && rm -r src
-
-RUN apk del .build-deps
-
-# Copy in our modified copy enabling the ticket checker.
-
-COPY docker/httpd.conf /usr/local/apache2/conf/httpd.conf
+# Check all needed modules installed by yum
+RUN perl -MCGI -MCache::Memcached -MConfig::Simple -MJSON -MCGI::Fast  -e1
 
 EXPOSE 80
-CMD ["httpd-foreground"]
+CMD ["/run-httpd.sh"]
 
 
 

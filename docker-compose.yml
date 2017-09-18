@@ -9,6 +9,7 @@ services:
 #    image: httpd:2.4-alpine
     volumes:
     - ./fcgid-access-checker:/fcgid-access-checker
+    - ./docker:/docker
     
   memcached:
     image: memcached:alpine
