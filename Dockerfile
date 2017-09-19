@@ -1,4 +1,4 @@
-FROM centos/httpd
+FROM kb/centos-httpd
 
 MAINTAINER tra@kb.dk
 

@@ -2,12 +2,12 @@ version: '2'
 
 services:
   web:
-    build: .
+    image: kb/centos-httpd # build with docker-kb-centos-httpd/build.sh
     ports:
     - "8080:80"
     links: [memcached]
-#    image: httpd:2.4-alpine
     volumes:
+    - ./docker/newspaper-fcgi.conf:/etc/httpd/conf.d/newspaper-fcgi.conf
     - ./fcgid-access-checker:/fcgid-access-checker
     - ./docker:/docker
     
