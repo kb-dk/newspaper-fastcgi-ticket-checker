@@ -18,46 +18,36 @@ initial version as simple as possible, and ABR, JRG and KFC later
 adding writing the usage log.  TRA then updated the sources for Perl
 5.16 used in production and did the initial Docker work.
 
-Statistics of usage logs are processed by newspaper-usage-statistics.
+Statistics of usage logs are processed by 
+https://github.com/statsbiblioteket/newspaper-usage-statistics
+
+From version 0.4 development is facilitated using Docker!
+
+First build the kb/centos-httpd image
+
+    cd docker-kb-centos-httpd && sh build.sh
+    
+Then use
+
+    docker-compose up
+    
+to get a development system running.
+
+See
+
+    http://localhost:8080/x
+    
+for protected items.  (This is not done at the time of this writing. 
+Also the statistics module needs to be merged with this project).
 
 
-To get needed Perl dependencies, ensure the `cpan` command is
-correctly set up, and then use
-
-     cpan -i FCGI Cache::Memcached Config::Simple JSON
-
-(sudo may be needed on some platforms to install for all users).
-
-Note:  For now, only a single memcached server is supported.
-
-
-Local development using Docker
+Remote testing:
 ---
 
-Development is now done using docker (on a suitably configured
-developer machine) and testing is done on achernar.
+(to be rewritten)'
 
-Use
-
-        docker????
-
-to bring up a small environment with an Apache HTTPD talking to a
-memcached which is populated with simple test data.
-
-TODO:  Add information on how to access test resources.
-
-
-Restart the docker environment using TODO after each source change, as
-httpd does not pick this up automatically.
-
-
-
-Remote development:
----
-
-
-Apache on achernar is configured to use this as cloned in the
-homedirectory.  When check.pl or CheckTicket.pm is updated run
+Apache on achernar is configured to use this project cloned to the
+home directory.  When check.pl or CheckTicket.pm is updated run
 
     sudo /usr/local/sbin/restart_httpd.sh
 
@@ -76,16 +66,14 @@ http://achernar:7880/fedora/risearch?type=triples&lang=spo&format=N-Triples&limi
 to ask DOMS for test uuids.
 
 
-Under Ubuntu 14.10 adapt `/etc/apache2/apache2.conf` similarly to
+Deployment:
+---
 
-    <Directory /var/www/>
-            Options Indexes FollowSymLinks
-            AllowOverride None
-            FcgidAccessChecker /home/ravn/git/newspaper-fastcgi-ticket-checker/fcgid-access-checker/check.pl
-	    Require all granted
-    </Directory>
+Run
 
-and ensure that the appropriate module is installed and activated.
+    sh create-deployment-targz-sh
+    
+on a clean checkout to create tmp/newspaper-fastcgi-ticket-checker-$(head -n 1 CHANGELOG.md).tgz,
+which can be sent to stage.
 
-
-/tra 2017-08-31
+/tra 2017-09-19

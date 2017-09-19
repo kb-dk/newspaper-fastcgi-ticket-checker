@@ -1,10 +1,18 @@
+0.4
+===
+
+Building necessary docker infrastructure to do local integration tests.
+
+/tra 2017-09-19
+
 0.3.1
 ===
 
 "ignored_resource_pattern" is now a required configuration parameter
 (which defines what to log to the usage log).
 
-Added create-deployment-targz.sh which does not have a leading 
+Added create-deployment-targz.sh which transparently adds the versioned
+extraction directory. 
 
 /tra 2017-09-11
 
