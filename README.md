@@ -25,7 +25,7 @@ From version 0.4 development is facilitated using Docker!
 
 First build the kb/centos-httpd image
 
-    cd docker-kb-centos-httpd && sh build.sh
+    cd kb-centos-httpd-docker && sh build.sh
     
 Then use
 
