@@ -21,7 +21,7 @@ my $ticketurlprefix = "http://alhena:7950/ticket-system-service/tickets/issueTic
 while(<STDIN>) {
     if (/\{\"([^"]+[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})":\{"resource":\[\{"type":"([^"]+)","url":\["([^"]+).*/) {
 	my $url = $3;
-	print $url
+	print STDERR "0. $url\n";
 	my $ticketurl = "$ticketurlprefix?id=$1&type=$2&ipAddress=$ARGV[0]&SBIPRoleMapper=inhouse";
 	my $content = get($ticketurl);
 
@@ -31,13 +31,13 @@ while(<STDIN>) {
 	my $ticket; 
 	if (($ticket) = $content =~ m/\:"([^"]+)"}/) {
 	    print STDERR "1 - $ticket\n";
+	    $url =~ s/\Q%5BticketId%5D/$ticket/;
+	    print STDERR "2 - $url\n";
+	    $url =~ s/\Q[ticketId]/$ticket/;
+	    print STDERR "3 - $url\n";
+	    print "$url\n";
 	} else {
 	    print STDERR "No ticket for $_ - content = $content\n";
 	}
-	$url =~ s/\Q%5BticketId%5D/$ticket/;
-	print STDERR "2 - $url\n";
-	$url =~ s/\Q[ticketId]/$ticket/;
-	print STDERR "3 - $url\n";
-	print "$url\n";
     }
 }

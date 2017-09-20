@@ -7,5 +7,6 @@ release.properties
 tmp/
 *~
 .idea
+*.iml
 
 /_Deparsed_XSubs.pm
