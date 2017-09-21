@@ -1,0 +1,6 @@
+src/main/newspaper_statistics.py.cfg
+.idea/
+*.iml
+*.ipr
+*.iws
+*~
