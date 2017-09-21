@@ -2,6 +2,7 @@
 ===
 
 Building necessary docker infrastructure to do local integration tests.
+Brought in newspaper-usage-statistics module for easier development.
 
 /tra 2017-09-19
 
