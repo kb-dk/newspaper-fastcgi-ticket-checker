@@ -2,7 +2,8 @@ version: '2'
 
 services:
   web:
-    image: kb/centos-httpd # build with kb-centos-httpd-docker/build.sh
+    build: kb-centos-httpd-docker/
+    image: kb/centos-httpd 
     ports:
     - "8080:80"
     links: [memcached]
@@ -14,6 +15,5 @@ services:
   memcached:
     # https://hub.docker.com/_/memcached/
     image: memcached:alpine
-    command: memcached -vv
-
+    command: "memcached -vv"
 
