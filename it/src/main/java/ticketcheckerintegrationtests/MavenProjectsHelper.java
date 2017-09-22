@@ -5,7 +5,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.stream.Stream;
 
 /**
  * <p>MavenProjectsHelper allows a Java snippet to locate its own .class file and from there navigate towards the root
@@ -23,7 +22,8 @@ public class MavenProjectsHelper {
      * @return
      */
     public static Path getRequiredPathTowardsRoot(Path startPath, String pathToFind) {
-        final Path pathFound = Stream.iterate(startPath, p -> p != null, p -> p.getParent()) // walk up to root
+        final Path pathFound = one.util.streamex.StreamEx
+                .iterate(startPath, p -> p != null, p -> p.getParent()) // walk up to root
                 .map(p -> p.resolve(pathToFind))
                 .filter(p -> p.toFile().exists())
                 .findFirst()
