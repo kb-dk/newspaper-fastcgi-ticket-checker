@@ -6,7 +6,6 @@ import com.palantir.docker.compose.configuration.ShutdownStrategy;
 import com.palantir.docker.compose.connection.ContainerName;
 import com.palantir.docker.compose.connection.waiting.HealthChecks;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import ticketcheckerintegrationtests.MavenProjectsHelper;
 
@@ -20,7 +19,7 @@ public class InitialSimpleTest {
 
     private static DockerComposeRule docker;
 
-    @BeforeClass
+    // @BeforeClass
     public static void beforeClass() throws IOException, InterruptedException {
         docker = DockerComposeRule.builder()
                 .file(MavenProjectsHelper
