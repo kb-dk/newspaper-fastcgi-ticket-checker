@@ -7,10 +7,17 @@ services:
     ports:
     - "8080:80"
     links: [memcached]
+    dns: # to get to Mars - FIXME: FInd out how to map it here instead.
+      - 130.225.24.33
+    dns_search: statsbiblioteket.dk
     volumes:
+    - ./docker/httpd.conf:/etc/httpd/conf/httpd.conf
     - ./docker/newspaper-fcgi.conf:/etc/httpd/conf.d/newspaper-fcgi.conf
+    - ./docker/newspaper-statistics.conf:/etc/httpd/conf.d/newspaper-statistics.conf
     - ./fcgid-access-checker:/fcgid-access-checker
     - ./docker:/docker
+    - ./stats/src/main/scripts/statistics/:/var/www/html/statistics/
+    - ./docker/newspaper_statistics.py.cfg:/var/www/newspaper_statistics.py.cfg
     
   memcached:
     # https://hub.docker.com/_/memcached/

@@ -21,10 +21,8 @@ import datetime
 import glob
 import os
 import re
-try:	# try for the unbundled version
-  import simplejson
-except: # no? use the builtin
-  import json as simplejson
+
+import json
 import suds
 import sys
 import time
@@ -68,6 +66,7 @@ config.read(config_file_name)
 # -- create web service client from WSDL url. see https://fedorahosted.org/suds/wiki/Documentation
 
 mediestream_wsdl = config.get("cgi", "mediestream_wsdl")
+
 # We need to disable the cache to avoid jumping through SELinux hoops but
 # suds is a pain in the a** and has no way to properly disable caching
 # This just crudely redefines the default ObjectCache() to be NoCache()
@@ -150,12 +149,12 @@ for statistics_file_name in glob.iglob(statistics_file_pattern):
 
         lineParts = line.partition(": ")
 
-        json = lineParts[2]
+        loggedJson = lineParts[2]
 
         try:
-            entry = simplejson.loads(json)
+            entry = json.loads(loggedJson)
         except:
-            print("Bad JSON skipped: ", json, file=sys.stderr)
+            print("Bad JSON skipped: ", loggedJson, file=sys.stderr)
             continue
 
             # -- line to be considered?
@@ -209,7 +208,7 @@ for statistics_file_name in glob.iglob(statistics_file_pattern):
                 query["group.field"] = "pageUUID"
                 query["search.document.collectdocids"] = "false"
 
-            queryJSON = simplejson.dumps(query)
+            queryJSON = json.dumps(query)
             summa_resource_text = mediestream_webservice.service.directJSON(queryJSON)
             # print(summa_resource_text.encode(encoding))
 
