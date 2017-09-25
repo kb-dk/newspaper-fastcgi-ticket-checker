@@ -1,4 +1,4 @@
-version: '2'
+version: '2' # https://docs.docker.com/compose/compose-file/compose-file-v2/
 
 services:
   web:
@@ -7,9 +7,6 @@ services:
     ports:
     - "8080:80"
     links: [memcached]
-    dns: # to get to Mars - FIXME: FInd out how to map it here instead.
-      - 130.225.24.33
-    dns_search: statsbiblioteket.dk
     volumes:
     - ./docker/httpd.conf:/etc/httpd/conf/httpd.conf
     - ./docker/newspaper-fcgi.conf:/etc/httpd/conf.d/newspaper-fcgi.conf
