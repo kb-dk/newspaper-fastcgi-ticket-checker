@@ -17,5 +17,6 @@
     <modules>
         <!-- integration tests -->
         <module>it</module>
+        <module>mocksumma</module>
     </modules>
 </project>
