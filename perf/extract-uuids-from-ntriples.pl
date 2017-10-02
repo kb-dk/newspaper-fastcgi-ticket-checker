@@ -8,6 +8,6 @@ use strict;
 
 while (<>) {
     if (/<info:fedora\/(uuid:[0-9a-z\-]+)>/) {
-	print "$1";
+        print "$1";
     }
 }

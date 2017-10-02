@@ -76,4 +76,19 @@ Run
 on a clean checkout to create tmp/newspaper-fastcgi-ticket-checker-$(head -n 1 CHANGELOG.md).tgz,
 which can be sent to stage.
 
+IntelliJ under Ubuntu configuration:
+---
+
+Earlier Emacs was used for development, but with the Docker migration it became feasible to
+use IntelliJ.  Note that the default source code formatter needs a small configuration change
+to conform to the previously used coding style.  The Settings -> Editor -> Code Style -> Perl 5 -> Wrapping and
+Braces checkbox "New line before -> Secondary compound" checkbox needs to be _unchecked_!  See 
+
+![screenshot of settings dialogue](gr/intellij-2017-perl-code-style.png)
+
+Also note that Ubuntu steals the Ctrl-Alt-L key combination.  It can be cleared in
+System Settings ->  Keyboard -> Shortcuts -> System.  Select "Lock Screen" and press
+backspace to clear.
+
+
 /tra 2017-09-19

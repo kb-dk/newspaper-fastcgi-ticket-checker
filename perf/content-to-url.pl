@@ -18,26 +18,26 @@ use 5.010;
 
 my $ticketurlprefix = "http://alhena:7950/ticket-system-service/tickets/issueTicket"; # FIXME, make configurable
 
-while(<STDIN>) {
+while (<STDIN>) {
     if (/\{\"([^"]+[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})":\{"resource":\[\{"type":"([^"]+)","url":\["([^"]+).*/) {
-	my $url = $3;
-	print STDERR "0. $url\n";
-	my $ticketurl = "$ticketurlprefix?id=$1&type=$2&ipAddress=$ARGV[0]&SBIPRoleMapper=inhouse";
-	my $content = get($ticketurl);
+        my $url = $3;
+        print STDERR "0. $url\n";
+        my $ticketurl = "$ticketurlprefix?id=$1&type=$2&ipAddress=$ARGV[0]&SBIPRoleMapper=inhouse";
+        my $content = get($ticketurl);
 
-	# Sample content:
-	# {"doms_aviser_edition:uuid:000a772b-e060-4add-8e0e-fb47bf90bbf1":"55bb859c-8973-4438-a18c-7fcc90522bf0"}
+        # Sample content:
+        # {"doms_aviser_edition:uuid:000a772b-e060-4add-8e0e-fb47bf90bbf1":"55bb859c-8973-4438-a18c-7fcc90522bf0"}
 
-	my $ticket; 
-	if (($ticket) = $content =~ m/\:"([^"]+)"}/) {
-	    print STDERR "1 - $ticket\n";
-	    $url =~ s/\Q%5BticketId%5D/$ticket/;
-	    print STDERR "2 - $url\n";
-	    $url =~ s/\Q[ticketId]/$ticket/;
-	    print STDERR "3 - $url\n";
-	    print "$url\n";
-	} else {
-	    print STDERR "No ticket for $_ - content = $content\n";
-	}
+        my $ticket;
+        if (($ticket) = $content =~ m/\:"([^"]+)"}/) {
+            print STDERR "1 - $ticket\n";
+            $url =~ s/\Q%5BticketId%5D/$ticket/;
+            print STDERR "2 - $url\n";
+            $url =~ s/\Q[ticketId]/$ticket/;
+            print STDERR "3 - $url\n";
+            print "$url\n";
+        } else {
+            print STDERR "No ticket for $_ - content = $content\n";
+        }
     }
 }

@@ -1,6 +1,10 @@
 #!/usr/bin/env perl5
 
 # FastCGI script to be invoked with FcgidAccessChecker from Apache.
+#
+# If "} else" is split on two lines when reformatting the source in IntelliJ, see /README.md for instructions.
+#
+
 
 use warnings;
 use strict;
@@ -19,7 +23,7 @@ sub logUsageStatisticsAndReturnStatusCodeFor {
 
     my $TRUE = (1 == 1);
     my $FALSE = (1 == 0);
-    
+
     # http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
     my $OK = "200";
     my $BAD_REQUEST = "400";
@@ -28,7 +32,7 @@ sub logUsageStatisticsAndReturnStatusCodeFor {
     my $BAD_MEDIA_TYPE = "415";
     my $INTERNAL_SERVER_ERROR = "500";
     my $SERVICE_UNAVAILABLE = "503";
-    
+
     my ($json_parser,
         $ticket,
         $remote_ip,
@@ -58,7 +62,7 @@ sub logUsageStatisticsAndReturnStatusCodeFor {
         print STDERR "no requested_resource\n";
         return $INTERNAL_SERVER_ERROR;
     }
-    
+
     if (!defined $resource_type) {
         print STDERR "no resource_type\n";
         return $INTERNAL_SERVER_ERROR;
@@ -82,39 +86,39 @@ sub logUsageStatisticsAndReturnStatusCodeFor {
     my $json_ticket;
 
     # http://docstore.mik.ua/orelly/perl/cookbook/ch10_13.htm
-    eval { # decode fails very hard, avoid crashing.
-    	$json_ticket = $json_parser->decode($ticket);
+    eval {# decode fails very hard, avoid crashing.
+        $json_ticket = $json_parser->decode($ticket);
     };
 
     if ($@) {
-	print STDERR "decode croaked - most likely bad JSON\n";
-	return $INTERNAL_SERVER_ERROR;
+        print STDERR "decode croaked - most likely bad JSON\n";
+        return $INTERNAL_SERVER_ERROR;
     }
 
     if (!defined $json_ticket) {
         print STDERR "no json_ticket\n";
-	return $INTERNAL_SERVER_ERROR;
+        return $INTERNAL_SERVER_ERROR;
     }
 
     # -- Check IP number is defined and correct.
-    
+
     if (!defined $remote_ip) {
         print STDERR "bad remote_ip\n";
-	return $INTERNAL_SERVER_ERROR;
+        return $INTERNAL_SERVER_ERROR;
     }
 
     my $json_ticket_ipaddress = $json_ticket->{ipAddress};
 
     if (!defined $json_ticket_ipaddress) {
         print STDERR "bad json_ticket_ipaddress\n";
-	return $INTERNAL_SERVER_ERROR;
+        return $INTERNAL_SERVER_ERROR;
     }
-    
+
     if ($remote_ip ne $json_ticket_ipaddress) {
-	print STDERR "IP different: " . $remote_ip . " != " . $json_ticket_ipaddress . "\n";
-	return $FORBIDDEN;
+        print STDERR "IP different: " . $remote_ip . " != " . $json_ticket_ipaddress . "\n";
+        return $FORBIDDEN;
     }
-    
+
     # -- Check requested UUID is in list of resources inside ticket.
 
     my $resource_scalar = $json_ticket->{resources};
@@ -142,17 +146,17 @@ sub logUsageStatisticsAndReturnStatusCodeFor {
         if ($found == $FALSE) {
             print STDERR "bad resource: $requested_resource not in \[@resources\]\n";
             return $FORBIDDEN;
-	}
+        }
     } else {
         print STDERR "bad memcached entry\n";
         return $INTERNAL_SERVER_ERROR;
     }
-    
+
     # -- Check content type
 
     if ($resource_type ne $json_ticket->{type}) {
         print STDERR "different media requested than approved for: resource_type $resource_type != json_ticket{type} " . $json_ticket->{type} . "\n";
-	return $BAD_MEDIA_TYPE;
+        return $BAD_MEDIA_TYPE;
     }
 
     if (length $ignored_resource_pattern and $resource_param =~ /$ignored_resource_pattern/) {
@@ -168,11 +172,11 @@ sub logUsageStatisticsAndReturnStatusCodeFor {
         my $now_string = time();
         my $statisticsMap = {
             'userAttributes' => $json_ticket->{userAttributes},
-            'resource_id' => $requested_resource,
-            'resource_type' => $resource_type,
-            'remote_ip' => $remote_ip,
-            'dateTime' => $now_string,
-            'ticket_id' => $ticket_id,
+            'resource_id'    => $requested_resource,
+            'resource_type'  => $resource_type,
+            'remote_ip'      => $remote_ip,
+            'dateTime'       => $now_string,
+            'ticket_id'      => $ticket_id,
         };
 
         my $statisticsLine = $json_parser->encode($statisticsMap);
@@ -183,7 +187,7 @@ sub logUsageStatisticsAndReturnStatusCodeFor {
     }
 
     # -- Nothing left to do. We're good.
-    
+
     return $OK;
 }
 
