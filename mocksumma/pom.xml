@@ -11,6 +11,8 @@
 
     <groupId>dk.statsbiblioteket.mediestream.mocksumma</groupId>
     <artifactId>mocksumma</artifactId>
+    <!-- we can get away with this because we don't have any dependencies! -->
+    <packaging>jar</packaging>
 
     <build>
         <plugins>
@@ -21,6 +23,18 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>dk.statsbiblioteket.mediestream.mocksumma.ReturnKnownResponseMockSumma</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>

@@ -7,7 +7,7 @@ package dk.statsbiblioteket.mediestream.mocksumma;
  */
 public class ReturnKnownResponseMockSummaLauncher {
 
-    public void main(String... argv) {
+    public static void main(String... argv) {
         ReturnKnownResponseMockSumma.main("http://localhost:9000/MockSearchWS?wsdl");
     }
 }

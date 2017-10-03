@@ -6,7 +6,7 @@ services:
     image: kb/centos-httpd 
     ports:
     - "8080:80"
-    links: [memcached]
+    links: [memcached, mocksumma]
     volumes:
     - ./docker/httpd.conf:/etc/httpd/conf/httpd.conf
     - ./docker/newspaper-fcgi.conf:/etc/httpd/conf.d/newspaper-fcgi.conf
@@ -15,9 +15,20 @@ services:
     - ./docker:/docker
     - ./stats/src/main/scripts/statistics/:/var/www/html/statistics/
     - ./docker/newspaper_statistics.py.cfg:/var/www/newspaper_statistics.py.cfg
-    
+
+  mocksumma:
+    image: openjdk:9-jdk
+    ports:
+    - "56808:56808"
+    expose: [56808]
+    volumes:
+    - ./mocksumma/target/mocksumma-1.0-SNAPSHOT.jar:/mocksumma.jar
+    #command: "sleep 10000000000"
+    command: "java --add-modules java.se.ee -jar /mocksumma.jar 'http://localhost:56808/mediehub/search/services/SearchWS?wsdl'"
+
   memcached:
     # https://hub.docker.com/_/memcached/
     image: memcached:alpine
-    command: "memcached -vv"
+    # command: "memcached -vv"
+    command: "memcached"
 
