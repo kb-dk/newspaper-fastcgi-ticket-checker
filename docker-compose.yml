@@ -39,6 +39,6 @@ services:
   memcached:
     # https://hub.docker.com/_/memcached/
     image: memcached:alpine
-    # command: "memcached -vv"
-    command: "memcached"
+    command: "memcached -vv"
+    # command: "memcached"
 

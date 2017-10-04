@@ -24,12 +24,13 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-           <plugin>
+            <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>dk.statsbiblioteket.mediestream.mockticketservice.MockTicketServiceLauncher</mainClass>
+                            <mainClass>dk.statsbiblioteket.mediestream.mockticketservice.MockTicketServiceLauncher
+                            </mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -73,6 +74,12 @@
             <version>1.3.8</version>
         </dependency>
 
+        <!-- Memcached client chosen based on https://stackoverflow.com/a/734975/53897 -->
+        <dependency>
+            <groupId>net.spy</groupId>
+            <artifactId>spymemcached</artifactId>
+            <version>2.12.3</version>
+        </dependency>
 
     </dependencies>
 

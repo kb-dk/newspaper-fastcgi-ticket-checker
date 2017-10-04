@@ -14,7 +14,16 @@ public class MockTicketServiceLauncher {
 
     public static void main(String... argv) {
         URI baseURI = UriBuilder.fromUri("http://localhost:7950/").build();
-        ResourceConfig config = new ResourceConfig(TicketEventHandler.class);
+        // @Named string injection does not work yet!
+
+        // https://newfivefour.com/java-jersey-dependency-injection.html
+        // https://stackoverflow.com/a/28222565/53897
+        // https://psamsotha.github.io/jersey/2015/11/01/jersey-method-parameter-injection.html
+        // https://jersey.github.io/documentation/latest/ioc.html
+
+        ResourceConfig config = new ResourceConfig(TicketEventHandler.class) {
+
+        };
         HttpServer server = JdkHttpServerFactory.createHttpServer(baseURI, config);
     }
 }

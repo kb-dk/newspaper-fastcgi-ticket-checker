@@ -3,6 +3,8 @@ package dk.statsbiblioteket.mediestream.mockticketservice;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -13,11 +15,19 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * <p><code> Input: http://alhena:7950/ticket-system-service/tickets/issueTicket?id=doms_aviser_page:uuid:...&type=Stream&ipAddress=1.2.3.4&SBIPRoleMapper=inhouse
+ * <p><code> Input: http://localhost:7950/ticket-system-service/tickets/issueTicket?id=doms_aviser_page:uuid:...&type=Stream&ipAddress=1.2.3.4&SBIPRoleMapper=inhouse
  * </code></p> <p><code> Return: {"doms_aviser_page:uuid:...":"196c4536-9fee-44ea-a52c-d918dc5aff14"} </code></p>
  */
 @Path("/ticket-system-service/tickets/issueTicket")
 public class TicketEventHandler {
+    private final String memcachedLocation;
+
+    @Inject
+    public TicketEventHandler(@Named("memcached.location") String memcachedLocation) {
+
+        this.memcachedLocation = memcachedLocation;
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response createTicketAndStoreInMemcached(//@Context Request request,
@@ -30,7 +40,7 @@ public class TicketEventHandler {
         Objects.requireNonNull(id, "ipAddress");
         Objects.requireNonNull(sbipRoleMapper, "sbipRoleMapper");
 
-        System.out.println(new java.util.Date() + " : " + id);
+        System.out.println(new java.util.Date() + " : " + id + " " + memcachedLocation);
 
         // https://stackoverflow.com/q/41590303/53897
         JSONObject object = new JSONObject();
