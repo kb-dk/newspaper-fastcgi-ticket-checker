@@ -19,22 +19,22 @@ services:
   mocksumma:
     image: openjdk:9-jdk
     ports:
-    - "7950:7950"
-    expose: [7950]
-    volumes:
-    - ./mocksumma/target/mocksumma-1.0-SNAPSHOT.jar:/mocksumma.jar
-    #command: "sleep 10000000000"
-    command: "java --add-modules java.se.ee -jar /mocksumma.jar 'http://0.0.0.0:56808/mediehub/search/services/SearchWS'"
-
-  mockticketchecker:
-    image: openjdk:9-jdk
-    ports:
     - "56808:56808"
     expose: [56808]
     volumes:
-    - ./mocksumma/target/mocksumma-1.0-SNAPSHOT.jar:/mocksumma.jar
-    #command: "sleep 10000000000"
+    - ./mocksumma/target/mocksumma-1.0-SNAPSHOT.jar:/mocksumma.jar:ro
     command: "java --add-modules java.se.ee -jar /mocksumma.jar 'http://0.0.0.0:56808/mediehub/search/services/SearchWS'"
+
+  mockticketchecker:
+    # http://localhost:7950/ticket-system-service/tickets/issueTicket?id=doms_aviser_page:uuid:....&type=Stream&ipAddress=1.2.3.4&SBIPRoleMapper=inhouse
+    image: openjdk:8-jdk
+    ports:
+    - "7950:7950"
+    expose: [7950]
+    links: [memcached]
+    volumes:
+    - ./mockticketservice/target/mockticketservice-1.0-SNAPSHOT-jar-with-dependencies.jar:/mockticketservice.jar:ro
+    command: "java -jar /mockticketservice.jar "
 
   memcached:
     # https://hub.docker.com/_/memcached/
