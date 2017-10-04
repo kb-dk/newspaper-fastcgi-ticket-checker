@@ -19,12 +19,12 @@ services:
   mocksumma:
     image: openjdk:9-jdk
     ports:
-    - "56808:56808"
+    - "127.0.0.1:56808:56808"
     expose: [56808]
     volumes:
     - ./mocksumma/target/mocksumma-1.0-SNAPSHOT.jar:/mocksumma.jar
     #command: "sleep 10000000000"
-    command: "java --add-modules java.se.ee -jar /mocksumma.jar 'http://localhost:56808/mediehub/search/services/SearchWS?wsdl'"
+    command: "java --add-modules java.se.ee -jar /mocksumma.jar 'http://0.0.0.0:56808/mediehub/search/services/SearchWS'"
 
   memcached:
     # https://hub.docker.com/_/memcached/
