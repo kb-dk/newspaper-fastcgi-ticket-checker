@@ -18,15 +18,11 @@ import java.util.UUID;
  * <p><code> Input: http://localhost:7950/ticket-system-service/tickets/issueTicket?id=doms_aviser_page:uuid:...&type=Stream&ipAddress=1.2.3.4&SBIPRoleMapper=inhouse
  * </code></p> <p><code> Return: {"doms_aviser_page:uuid:...":"196c4536-9fee-44ea-a52c-d918dc5aff14"} </code></p>
  */
-@Path("/ticket-system-service/tickets/issueTicket")
+@Path("issueTicket")
 public class TicketEventHandler {
-    private final String memcachedLocation;
-
     @Inject
-    public TicketEventHandler(@Named("memcached.location") String memcachedLocation) {
-
-        this.memcachedLocation = memcachedLocation;
-    }
+    @Named("memcached.location")
+    protected String memcachedLocation;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -39,6 +35,7 @@ public class TicketEventHandler {
         Objects.requireNonNull(type, "type");
         Objects.requireNonNull(id, "ipAddress");
         Objects.requireNonNull(sbipRoleMapper, "sbipRoleMapper");
+        Objects.requireNonNull(memcachedLocation, "memcachedLocation"); // ensure injection works.
 
         System.out.println(new java.util.Date() + " : " + id + " " + memcachedLocation);
 

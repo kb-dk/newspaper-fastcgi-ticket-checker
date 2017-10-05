@@ -81,6 +81,28 @@
             <version>2.12.3</version>
         </dependency>
 
+        <!-- for now we reuse the dpa configuration stuff. -->
+        <dependency>
+            <groupId>dk.statsbiblioteket.digital_pligtaflevering_aviser</groupId>
+            <artifactId>dpa-harness</artifactId>
+            <version>master-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.21</version>
+        </dependency>
+
+        <!-- just log to console when testing -->
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.21</version>
+            <optional>true</optional>
+        </dependency>
+
     </dependencies>
 
 </project>
