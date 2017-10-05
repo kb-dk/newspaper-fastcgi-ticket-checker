@@ -1,7 +1,9 @@
 package dk.statsbiblioteket.mediestream.mockticketservice;
 
+import net.spy.memcached.MemcachedClient;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -11,6 +13,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -20,9 +24,22 @@ import java.util.UUID;
  */
 @Path("issueTicket")
 public class TicketEventHandler {
+
+
+    /**
+     * Location of memcached server.  The mock only uses a single memcached server so we just use a single value
+     * directly.
+     */
+    protected final String memcachedLocation;
+
+    protected MemcachedClient memcachedClient;
+
     @Inject
-    @Named("memcached.location")
-    protected String memcachedLocation;
+    public TicketEventHandler(@Named("memcached.location") String memcachedLocation) {
+        this.memcachedLocation = memcachedLocation;
+    }
+
+    ;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -30,19 +47,40 @@ public class TicketEventHandler {
                                                     @QueryParam("id") String id,
                                                     @QueryParam("type") String type,
                                                     @QueryParam("ipAddress") String ipAddress,
-                                                    @QueryParam("SBIPRoleMapper") String sbipRoleMapper) throws JSONException {
-        Objects.requireNonNull(id, "id");
-        Objects.requireNonNull(type, "type");
-        Objects.requireNonNull(id, "ipAddress");
-        Objects.requireNonNull(sbipRoleMapper, "sbipRoleMapper");
-        Objects.requireNonNull(memcachedLocation, "memcachedLocation"); // ensure injection works.
+                                                    @QueryParam("SBIPRoleMapper") String sbipRoleMapper) throws JSONException, IOException {
+        try {
+            Objects.requireNonNull(id, "id");
+            Objects.requireNonNull(type, "type");
+            Objects.requireNonNull(id, "ipAddress");
+            Objects.requireNonNull(sbipRoleMapper, "sbipRoleMapper");
+            Objects.requireNonNull(memcachedLocation, "memcachedLocation"); // ensure injection works.
 
-        System.out.println(new java.util.Date() + " : " + id + " " + memcachedLocation);
+            if (memcachedClient == null) {
+                synchronized (this.getClass()) {
+                    if (memcachedClient == null) {
+                        String[] splitted = memcachedLocation.split(":");
+                        if (splitted.length < 2) {
+                            throw new IllegalArgumentException("memcachedLocation.split(':').length < 2");
+                        }
+                        memcachedClient = new MemcachedClient(new InetSocketAddress(splitted[0], Integer.valueOf(splitted[1])));
+                    }
+                }
+            }
+            Objects.requireNonNull(memcachedClient, "memcachedClient");
 
-        // https://stackoverflow.com/q/41590303/53897
-        JSONObject object = new JSONObject();
-        object.put(id, UUID.randomUUID());
-        Response response = Response.status(Response.Status.OK).entity(object.toString()).build();
-        return response;
+            System.out.println(new java.util.Date() + " : " + id + " " + memcachedLocation);
+
+            // https://stackoverflow.com/q/41590303/53897
+            final UUID ticketId = UUID.randomUUID();
+
+            memcachedClient.add(ticketId.toString(), 60*60*24*30 - 1, "BAD TICKET");
+            JSONObject object = new JSONObject();
+            object.put(id, ticketId);
+            Response response = Response.status(Response.Status.OK).entity(object.toString()).build();
+            return response;
+        } catch (Throwable e) {
+            LoggerFactory.getLogger(TicketEventHandler.class).error("Throwable thrown :-/", e);
+            throw e;
+        }
     }
 }
