@@ -29,7 +29,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>dk.statsbiblioteket.mediestream.mockticketservice.MockTicketServiceLauncher
+                            <mainClass>dk.statsbiblioteket.mediestream.mockticketservice.MockTicketServiceMain
                             </mainClass>
                         </manifest>
                     </archive>

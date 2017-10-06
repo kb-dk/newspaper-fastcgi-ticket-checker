@@ -36,7 +36,7 @@ services:
     volumes:
     # "ro" read/only attribute does not work on MacOS 10.13
     - ./mockticketservice/target/mockticketservice-1.0-SNAPSHOT-jar-with-dependencies.jar:/mockticketservice.jar
-    command: "java -jar /mockticketservice.jar "
+    command: "java -jar /mockticketservice.jar mockticketservice-docker.properties"
 
   memcached:
     # https://hub.docker.com/_/memcached/
