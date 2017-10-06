@@ -22,7 +22,8 @@ services:
     - "56808:56808"
     expose: [56808]
     volumes:
-    - ./mocksumma/target/mocksumma-1.0-SNAPSHOT.jar:/mocksumma.jar:ro
+    # "ro" read/only attribute does not work on MacOS 10.13
+    - ./mocksumma/target/mocksumma-1.0-SNAPSHOT.jar:/mocksumma.jar
     command: "java --add-modules java.se.ee -jar /mocksumma.jar 'http://0.0.0.0:56808/mediehub/search/services/SearchWS'"
 
   mockticketchecker:
@@ -33,7 +34,8 @@ services:
     expose: [7950]
     links: [memcached]
     volumes:
-    - ./mockticketservice/target/mockticketservice-1.0-SNAPSHOT-jar-with-dependencies.jar:/mockticketservice.jar:ro
+    # "ro" read/only attribute does not work on MacOS 10.13
+    - ./mockticketservice/target/mockticketservice-1.0-SNAPSHOT-jar-with-dependencies.jar:/mockticketservice.jar
     command: "java -jar /mockticketservice.jar "
 
   memcached:
