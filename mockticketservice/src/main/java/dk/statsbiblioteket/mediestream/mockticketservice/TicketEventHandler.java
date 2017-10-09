@@ -25,7 +25,6 @@ import java.util.UUID;
 @Path("issueTicket")
 public class TicketEventHandler {
 
-
     /**
      * Location of memcached server.  The mock only uses a single memcached server so we just use a single value
      * directly.
@@ -72,8 +71,9 @@ public class TicketEventHandler {
 
             // https://stackoverflow.com/q/41590303/53897
             final UUID ticketId = UUID.randomUUID();
+            JSONObject ticketContent = new MockTicketContentGenerator().ticketContentFrom(ticketId.toString(), "Stream", "http://foobar", "Thumbnails", "http://fum");
 
-            memcachedClient.add(ticketId.toString(), 60*60*24*30 - 1, "BAD TICKET");
+            memcachedClient.add(ticketId.toString(), 60 * 60 * 24 * 30 - 1, "BAD TICKET");
             JSONObject object = new JSONObject();
             object.put(id, ticketId);
             Response response = Response.status(Response.Status.OK).entity(object.toString()).build();
@@ -83,4 +83,5 @@ public class TicketEventHandler {
             throw e;
         }
     }
+
 }
