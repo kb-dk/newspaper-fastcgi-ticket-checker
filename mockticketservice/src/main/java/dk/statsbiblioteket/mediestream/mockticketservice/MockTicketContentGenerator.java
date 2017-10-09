@@ -3,7 +3,9 @@ package dk.statsbiblioteket.mediestream.mockticketservice;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -22,11 +24,17 @@ class NonSlashEscapingJSONObject extends JSONObject {
 }
 
 public class MockTicketContentGenerator {
-    public JSONObject ticketContentFrom(String ticketId, String type1, String url1, String type2, String url2) {
-        try {
 
+    public List<List<String>> knownTicketContents = Arrays.asList(
+            Arrays.asList("doms_aviser_page:uuid:bcfd6c77-6b5e-471b-a6f2-2ddaaacea791", "Stream","http://localhost", "Thumbnails", "http://localhost"),
+            Arrays.asList("doms_aviser_page:uuid:3c83fe89-2462-4471-b76d-50cd67928465", "Stream","http://localhost", "Thumbnails", "http://localhost"),
+            Arrays.asList("doms_aviser_page:uuid:de3745c9-a731-49ab-ad71-440fdabe7faa", "Stream","http://localhost", "Thumbnails", "http://localhost")
+    );
+
+    public JSONObject ticketContentFrom(String domsId, String type1, String url1, String type2, String url2) {
+        try {
             final JSONObject jsonObject = new NonSlashEscapingJSONObject();
-            jsonObject.put(ticketId,
+            jsonObject.put(domsId,
                     new NonSlashEscapingJSONObject().put(
                             "resource", Arrays.asList(
                                     new NonSlashEscapingJSONObject().put("type", type1).put("url", url1),
@@ -35,6 +43,15 @@ public class MockTicketContentGenerator {
         } catch (JSONException e) {
             throw new RuntimeException("put", e);
         }
+
+    }
+
+    public JSONObject ticketContentFrom(@NotNull String domsId) {
+        List<String> line = knownTicketContents.stream()
+                .filter(l -> l.get(0).equals(domsId))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("domsID not known: " + domsId));
+        return ticketContentFrom(line.get(0), line.get(1), line.get(2), line.get(3), line.get(4));
 
     }
 }

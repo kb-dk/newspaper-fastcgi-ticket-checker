@@ -3,6 +3,7 @@ package dk.statsbiblioteket.mediestream.mockticketservice;
 import net.spy.memcached.MemcachedClient;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
@@ -25,6 +26,8 @@ import java.util.UUID;
 @Path("issueTicket")
 public class TicketEventHandler {
 
+    Logger log = LoggerFactory.getLogger(getClass());
+
     /**
      * Location of memcached server.  The mock only uses a single memcached server so we just use a single value
      * directly.
@@ -34,8 +37,13 @@ public class TicketEventHandler {
     protected MemcachedClient memcachedClient;
 
     @Inject
-    public TicketEventHandler(@Named("memcached.location") String memcachedLocation) {
+    public TicketEventHandler(@Named("memcached.location") String memcachedLocation) throws IOException {
         this.memcachedLocation = memcachedLocation;
+        String[] splitted = memcachedLocation.split(":");
+        if (splitted.length < 2) {
+            throw new IllegalArgumentException("memcachedLocation.split(':').length < 2");
+        }
+        memcachedClient = new MemcachedClient(new InetSocketAddress(splitted[0], Integer.valueOf(splitted[1])));
     }
 
     ;
@@ -43,40 +51,33 @@ public class TicketEventHandler {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response createTicketAndStoreInMemcached(//@Context Request request,
-                                                    @QueryParam("id") String id,
+                                                    @QueryParam("id") String domsId,
                                                     @QueryParam("type") String type,
                                                     @QueryParam("ipAddress") String ipAddress,
                                                     @QueryParam("SBIPRoleMapper") String sbipRoleMapper) throws JSONException, IOException {
         try {
-            Objects.requireNonNull(id, "id");
+            Objects.requireNonNull(domsId, "id");
             Objects.requireNonNull(type, "type");
-            Objects.requireNonNull(id, "ipAddress");
+            Objects.requireNonNull(ipAddress, "ipAddress");
             Objects.requireNonNull(sbipRoleMapper, "sbipRoleMapper");
             Objects.requireNonNull(memcachedLocation, "memcachedLocation"); // ensure injection works.
-
-            if (memcachedClient == null) {
-                synchronized (this.getClass()) {
-                    if (memcachedClient == null) {
-                        String[] splitted = memcachedLocation.split(":");
-                        if (splitted.length < 2) {
-                            throw new IllegalArgumentException("memcachedLocation.split(':').length < 2");
-                        }
-                        memcachedClient = new MemcachedClient(new InetSocketAddress(splitted[0], Integer.valueOf(splitted[1])));
-                    }
-                }
-            }
             Objects.requireNonNull(memcachedClient, "memcachedClient");
 
-            System.out.println(new java.util.Date() + " : " + id + " " + memcachedLocation);
+            // We always grant the ticket!
 
-            // https://stackoverflow.com/q/41590303/53897
             final UUID ticketId = UUID.randomUUID();
-            JSONObject ticketContent = new MockTicketContentGenerator().ticketContentFrom(ticketId.toString(), "Stream", "http://foobar", "Thumbnails", "http://fum");
+            final String ticketContent = new MockTicketContentGenerator().ticketContentFrom(domsId).toString();
 
-            memcachedClient.add(ticketId.toString(), 60 * 60 * 24 * 30 - 1, "BAD TICKET");
+            // Store the new ticket in memcached using the specific ticketId (allowing memcached to let the ticket time out)
+            memcachedClient.add(ticketId.toString(), 60 * 60 * 24 * 30 - 1, ticketContent);
+
+            log.debug("domsId: {}, ticketId: {}, memcachedLocation: {}", domsId, ticketId, memcachedLocation);
+
+            // Generate a "{domsId: ticketId}" response -- https://stackoverflow.com/q/41590303/53897
             JSONObject object = new JSONObject();
-            object.put(id, ticketId);
+            object.put(domsId, ticketId);
             Response response = Response.status(Response.Status.OK).entity(object.toString()).build();
+            log.trace("Response: {}", response);
             return response;
         } catch (Throwable e) {
             LoggerFactory.getLogger(TicketEventHandler.class).error("Throwable thrown :-/", e);

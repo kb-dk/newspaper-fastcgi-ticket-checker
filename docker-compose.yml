@@ -27,6 +27,7 @@ services:
     command: "java --add-modules java.se.ee -jar /mocksumma.jar 'http://0.0.0.0:56808/mediehub/search/services/SearchWS'"
 
   mockticketchecker:
+    # Magic module incarnation for Jersey under Java 9 pending.  Hence Java 8 container.
     # http://localhost:7950/ticket-system-service/tickets/issueTicket?id=doms_aviser_page:uuid:....&type=Stream&ipAddress=1.2.3.4&SBIPRoleMapper=inhouse
     image: openjdk:8-jdk
     ports:
