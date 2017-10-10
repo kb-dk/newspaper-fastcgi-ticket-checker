@@ -11,6 +11,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <slf4j.version>1.7.25</slf4j.version>
     </properties>
 
     <build>
@@ -25,10 +26,12 @@
                         <target>1.9</target>
                     </configuration>
                 </plugin>
+
             </plugins>
         </pluginManagement>
     </build>
     <modules>
+        <module>configurationmap</module>
         <!-- integration tests -->
         <module>it</module>
         <module>mocksumma</module>

@@ -6,7 +6,7 @@ services:
     image: kb/centos-httpd 
     ports:
     - "8080:80"
-    links: [memcached, mocksumma, mockticketchecker]
+    links: [memcached, mocksumma, mockticketservice]
     volumes:
     - ./docker/httpd.conf:/etc/httpd/conf/httpd.conf
     - ./docker/newspaper-fcgi.conf:/etc/httpd/conf.d/newspaper-fcgi.conf
@@ -26,7 +26,7 @@ services:
     - ./mocksumma/target/mocksumma-1.0-SNAPSHOT.jar:/mocksumma.jar
     command: "java --add-modules java.se.ee -jar /mocksumma.jar 'http://0.0.0.0:56808/mediehub/search/services/SearchWS'"
 
-  mockticketchecker:
+  mockticketservice:
     # Magic module incarnation for Jersey under Java 9 pending.  Hence Java 8 container.
     # http://localhost:7950/ticket-system-service/tickets/issueTicket?id=doms_aviser_page:uuid:....&type=Stream&ipAddress=1.2.3.4&SBIPRoleMapper=inhouse
     image: openjdk:8-jdk

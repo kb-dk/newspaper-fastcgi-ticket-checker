@@ -63,6 +63,23 @@
             <artifactId>jersey-container-jdk-http</artifactId>
             <version>2.26</version>
         </dependency>
+
+        <!-- Java 9 requirements.... -->
+
+        <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.activation/activation -->
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+
         <!-- https://stackoverflow.com/a/44711740/53897 -->
         <dependency>
             <groupId>org.glassfish.jersey.inject</groupId>
@@ -82,11 +99,10 @@
             <version>2.12.3</version>
         </dependency>
 
-        <!-- for now we reuse the dpa configuration stuff. -->
         <dependency>
-            <groupId>dk.statsbiblioteket.digital_pligtaflevering_aviser</groupId>
-            <artifactId>dpa-harness</artifactId>
-            <version>master-SNAPSHOT</version>
+            <groupId>dk.statsbiblioteket.configuration</groupId>
+            <artifactId>configuration-map</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>

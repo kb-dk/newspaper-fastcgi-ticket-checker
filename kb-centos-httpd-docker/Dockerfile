@@ -17,6 +17,9 @@ RUN yum -y install fcgi-perl bzip2 perl-JSON perl-Config-Simple perl-Cache-Memca
 # Things needed by Statistics CGI Python script
 RUN yum -y install python-lxml python-suds
 
+# Delete welcome page module
+RUN rm /etc/httpd/conf.d/welcome.conf
+
 # Ensure target directory exists.
 RUN mkdir -p /var/www/html/statistics/
 
