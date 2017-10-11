@@ -69,4 +69,16 @@ public class ConfigurationMapHelper {
         }
         return Optional.of(map);
     }
+
+    /**
+     * Get the configuration value for <code>key</code> from <code>map</code>.  If not present, throw a {@link
+     * ConfigurationKeyNotSetException} with <code>key</code> as the message.
+     *
+     * @param map configuration map to use
+     * @param key key to look up
+     * @return value for key in configuration map
+     */
+    public String getRequired(ConfigurationMap map, String key) {
+        return map.get(key).orElseThrow(() -> new ConfigurationKeyNotSetException(key));
+    }
 }

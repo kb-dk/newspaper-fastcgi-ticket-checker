@@ -86,7 +86,7 @@ public class MainExecutor {
             map.add(ConfigurationMapHelper.systemPropertiesAsMap(KB_GIT_ID));
         }
 
-        // Finally, add "key=value" pairs from the command line.
+        // Finally, add "key=value" pairs from the command line, overriding any previous values
         {
             Map<String, String> argsMap = new TreeMap<>();
 

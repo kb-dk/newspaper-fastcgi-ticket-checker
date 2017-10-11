@@ -31,7 +31,7 @@
         </pluginManagement>
     </build>
     <modules>
-        <module>configurationmap</module>
+        <module>configuration-map</module>
         <!-- integration tests -->
         <module>it</module>
         <module>mocksumma</module>

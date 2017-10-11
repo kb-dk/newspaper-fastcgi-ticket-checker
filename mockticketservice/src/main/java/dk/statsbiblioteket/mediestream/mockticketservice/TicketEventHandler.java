@@ -15,6 +15,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.InetSocketAddress;
 import java.util.Objects;
 import java.util.UUID;
@@ -81,7 +83,12 @@ public class TicketEventHandler {
             return response;
         } catch (Throwable e) {
             LoggerFactory.getLogger(TicketEventHandler.class).error("Throwable thrown :-/", e);
-            throw e;
+            final StringWriter sw = new StringWriter();
+            final PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(sw.toString()).build();
+            return response;
+
         }
     }
 

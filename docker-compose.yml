@@ -13,6 +13,8 @@ services:
     - ./docker/newspaper-statistics.conf:/etc/httpd/conf.d/newspaper-statistics.conf
     - ./fcgid-access-checker:/fcgid-access-checker
     - ./docker:/docker
+    - ./docker/index.html:/var/www/html/index.html
+    - ./docker/protected:/var/www/html/protected/
     - ./stats/src/main/scripts/statistics/:/var/www/html/statistics/
     - ./docker/newspaper_statistics.py.cfg:/var/www/newspaper_statistics.py.cfg
 
