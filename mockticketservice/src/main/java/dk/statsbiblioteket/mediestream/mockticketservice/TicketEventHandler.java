@@ -65,7 +65,7 @@ public class TicketEventHandler {
             Objects.requireNonNull(memcachedLocation, "memcachedLocation"); // ensure injection works.
             Objects.requireNonNull(memcachedClient, "memcachedClient");
 
-            // We always grant the ticket!
+            // We grant the ticket if the domsId is known.
 
             final UUID ticketId = UUID.randomUUID();
             final String ticketContent = new MockTicketContentGenerator().ticketContentFrom(domsId).toString();

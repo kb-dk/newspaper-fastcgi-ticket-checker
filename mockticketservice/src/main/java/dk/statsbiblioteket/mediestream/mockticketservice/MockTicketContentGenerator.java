@@ -26,6 +26,7 @@ class NonSlashEscapingJSONObject extends JSONObject {
 public class MockTicketContentGenerator {
 
     public List<List<String>> knownTicketContents = Arrays.asList(
+            Arrays.asList("doms_aviser_page:uuid:11111111-1111-1111-1111-111111111111", "Stream","http://localhost", "Thumbnails", "http://localhost"),
             Arrays.asList("doms_aviser_page:uuid:bcfd6c77-6b5e-471b-a6f2-2ddaaacea791", "Stream","http://localhost", "Thumbnails", "http://localhost"),
             Arrays.asList("doms_aviser_page:uuid:3c83fe89-2462-4471-b76d-50cd67928465", "Stream","http://localhost", "Thumbnails", "http://localhost"),
             Arrays.asList("doms_aviser_page:uuid:de3745c9-a731-49ab-ad71-440fdabe7faa", "Stream","http://localhost", "Thumbnails", "http://localhost")

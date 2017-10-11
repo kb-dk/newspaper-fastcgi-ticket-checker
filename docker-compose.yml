@@ -30,7 +30,7 @@ services:
 
   mockticketservice:
     # Magic module incarnation for Jersey under Java 9 pending.  Hence Java 8 container.
-    # http://localhost:7950/ticket-system-service/tickets/issueTicket?id=doms_aviser_page:uuid:....&type=Stream&ipAddress=1.2.3.4&SBIPRoleMapper=inhouse
+    # http://localhost:7950/ticket-system-service/tickets/issueTicket?id=doms_aviser_page:uuid:11111111-1111-1111-1111-111111111111&type=Streamx&ipAddress=1.2.3.4&SBIPRoleMapper=inhouse
     image: openjdk:8-jdk
     ports:
     - "7950:7950"
