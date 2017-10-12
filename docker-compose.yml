@@ -13,8 +13,9 @@ services:
     - ./docker/newspaper-statistics.conf:/etc/httpd/conf.d/newspaper-statistics.conf
     - ./fcgid-access-checker:/fcgid-access-checker
     - ./docker:/docker
-    - ./docker/index.html:/var/www/html/index.html
-    - ./docker/protected:/var/www/html/protected/
+    - ./docker/webroot:/var/www/html/
+    - ./docker/webprotected:/var/www/html/protected/
+    - ./docker/cgi-bin:/var/www/cgi-bin
     - ./stats/src/main/scripts/statistics/:/var/www/html/statistics/
     - ./docker/newspaper_statistics.py.cfg:/var/www/newspaper_statistics.py.cfg
 
@@ -30,16 +31,16 @@ services:
 
   mockticketservice:
     # Magic module incarnation for Jersey under Java 9 pending.  Hence Java 8 container.
-    # http://localhost:7950/ticket-system-service/tickets/issueTicket?id=doms_aviser_page:uuid:11111111-1111-1111-1111-111111111111&type=Streamx&ipAddress=1.2.3.4&SBIPRoleMapper=inhouse
-    image: openjdk:8-jdk
+    # http://localhost:7950/mock/issueTicket?id=doms_aviser_page:uuid:11111111-1111-1111-1111-111111111111&type=Stream&ipAddress=172.20.0.1&SBIPRoleMapper=inhouse
+    image: openjdk:9-jdk
     ports:
     - "7950:7950"
     expose: [7950]
     links: [memcached]
     volumes:
     # "ro" read/only attribute does not work on MacOS 10.13
-    - ./mockticketservice/target/mockticketservice-1.0-SNAPSHOT-jar-with-dependencies.jar:/mockticketservice.jar
-    command: "java -jar /mockticketservice.jar mockticketservice-docker.properties"
+    - ./mockticketservicecontentresolver/target/mockticketservicecontentresolver-1.0-SNAPSHOT-jar-with-dependencies.jar:/mockticketservicecontentresolver.jar
+    command: "java -jar /mockticketservicecontentresolver.jar mockticketservice-docker.properties"
 
   memcached:
     # https://hub.docker.com/_/memcached/

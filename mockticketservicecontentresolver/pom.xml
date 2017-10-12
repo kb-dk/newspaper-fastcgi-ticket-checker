@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>dk.statsbiblioteket.mediestream.mocksumma</groupId>
-    <artifactId>mockticketservice</artifactId>
+    <artifactId>mockticketservicecontentresolver</artifactId>
     <packaging>jar</packaging>
 
     <build>
@@ -30,7 +30,8 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>dk.statsbiblioteket.mediestream.mockticketservice.MockTicketServiceMain
+                            <mainClass>
+                                dk.statsbiblioteket.mediestream.mockticketservice.MockTicketServiceContentResolverMain
                             </mainClass>
                         </manifest>
                     </archive>

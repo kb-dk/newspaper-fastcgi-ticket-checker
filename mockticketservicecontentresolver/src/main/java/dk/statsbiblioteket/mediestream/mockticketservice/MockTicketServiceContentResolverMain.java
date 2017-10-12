@@ -17,7 +17,7 @@ import java.util.function.Function;
 /**
  * https://technology.amis.nl/2015/05/11/publish-rest-service-from-java-se-outside-java-ee-container/
  */
-public class MockTicketServiceMain {
+public class MockTicketServiceContentResolverMain {
 
     public static final String TICKETSERVICE_BASEURL = "ticketservice.baseurl";
 
@@ -41,7 +41,7 @@ public class MockTicketServiceMain {
                     // https://stackoverflow.com/a/28222565/53897
                     for (String key : map.keySet()) {
                         map.get(key).ifPresent(value -> {
-                            LoggerFactory.getLogger(MockTicketServiceMain.class).debug("Bind '" + key + "' to '" + value + "'");
+                            LoggerFactory.getLogger(MockTicketServiceContentResolverMain.class).debug("Bind '" + key + "' to '" + value + "'");
                             bind(value).to(String.class).named(key);
                         });
                     }
@@ -49,7 +49,8 @@ public class MockTicketServiceMain {
             };
 
             ResourceConfig config = new ResourceConfig();
-            config.register(TicketEventHandler.class);
+            config.register(TicketServiceEventHandler.class);
+            config.register(ContentResolverEventHandler.class);
             config.register(namedKeyValueBinder);
             Tool tool =  () -> {
                 HttpServer httpServer = JdkHttpServerFactory.createHttpServer(baseURI, config); // launches non-daemon server thread and returns.

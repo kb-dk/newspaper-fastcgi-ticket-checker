@@ -10,13 +10,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>dk.statsbiblioteket.mediestream.mocksumma</groupId>
-    <artifactId>mockticketservice-ide</artifactId>
+    <artifactId>mockticketservicecontentresolver-ide</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
             <groupId>dk.statsbiblioteket.mediestream.mocksumma</groupId>
-            <artifactId>mockticketservice</artifactId>
+            <artifactId>mockticketservicecontentresolver</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

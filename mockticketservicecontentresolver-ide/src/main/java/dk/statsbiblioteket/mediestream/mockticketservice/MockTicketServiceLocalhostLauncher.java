@@ -6,6 +6,6 @@ package dk.statsbiblioteket.mediestream.mockticketservice;
 public class MockTicketServiceLocalhostLauncher {
 
     public static void main(String... args) {
-        MockTicketServiceMain.main("mockticketservice-ide.properties");
+        MockTicketServiceContentResolverMain.main("mockticketservice-ide.properties");
     }
 }

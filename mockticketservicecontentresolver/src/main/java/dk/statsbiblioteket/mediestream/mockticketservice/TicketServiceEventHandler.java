@@ -26,7 +26,7 @@ import java.util.UUID;
  * </code></p> <p><code> Return: {"doms_aviser_page:uuid:...":"196c4536-9fee-44ea-a52c-d918dc5aff14"} </code></p>
  */
 @Path("issueTicket")
-public class TicketEventHandler {
+public class TicketServiceEventHandler {
 
     Logger log = LoggerFactory.getLogger(getClass());
 
@@ -39,7 +39,7 @@ public class TicketEventHandler {
     protected MemcachedClient memcachedClient;
 
     @Inject
-    public TicketEventHandler(@Named("memcached.location") String memcachedLocation) throws IOException {
+    public TicketServiceEventHandler(@Named("memcached.location") String memcachedLocation) throws IOException {
         this.memcachedLocation = memcachedLocation;
         String[] splitted = memcachedLocation.split(":");
         if (splitted.length < 2) {
@@ -82,7 +82,7 @@ public class TicketEventHandler {
             log.trace("Response: {}", response);
             return response;
         } catch (Throwable e) {
-            LoggerFactory.getLogger(TicketEventHandler.class).error("Throwable thrown :-/", e);
+            LoggerFactory.getLogger(TicketServiceEventHandler.class).error("Throwable thrown :-/", e);
             final StringWriter sw = new StringWriter();
             final PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
