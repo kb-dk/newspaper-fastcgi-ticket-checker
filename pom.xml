@@ -35,6 +35,8 @@
         <!-- integration tests -->
         <module>it</module>
         <module>mocksumma</module>
+        <module>mocksumma-ide</module>
         <module>mockticketservice</module>
+        <module>mockticketservice-ide</module>
     </modules>
 </project>

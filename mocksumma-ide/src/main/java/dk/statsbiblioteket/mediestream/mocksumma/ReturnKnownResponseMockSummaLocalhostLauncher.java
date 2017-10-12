@@ -5,7 +5,7 @@ package dk.statsbiblioteket.mediestream.mocksumma;
  * an IDE.  Typically this implies locating things, constructing and passing in configuration strings,
  * providing verbose logs etc.
  */
-public class ReturnKnownResponseMockSummaLauncher {
+public class ReturnKnownResponseMockSummaLocalhostLauncher {
 
     public static void main(String... argv) {
         ReturnKnownResponseMockSumma.main("http://localhost:9000/MockSearchWS?wsdl");
