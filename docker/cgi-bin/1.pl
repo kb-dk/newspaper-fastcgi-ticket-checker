@@ -7,6 +7,7 @@ use warnings FATAL => 'all';
 use CGI qw/:standard/;
 use JSON;
 use Cache::Memcached;
+use URI::URL;
 
 # http://www.perlmonks.org/?node_id=320253
 BEGIN { $SIG{'__DIE__'} = sub { print <<__WARN__ and exit 1 } }
@@ -20,6 +21,20 @@ __WARN__
 
 print header('text/html'),
     start_html('Hello world');
+
+my $query = CGI->new;  # parameter "id" is domsId.
+
+# -- First get the content for the id.
+
+
+
+# -- Then get a ticket for each type.
+
+#"http://alhena:7950/ticket-system-service/tickets/issueTicket";
+#"http://localhost:7950/mock/issueTicket?id=doms_aviser_page:uuid:11111111-1111-1111-1111-111111111111&type=Stream&ipAddress=172.20.0.1&SBIPRoleMapper=inhouse""
+
+
+# --
 
 my $memcached_servers = "memcached:11211";
 my $memcached_server = new Cache::Memcached {
@@ -35,7 +50,6 @@ my $json_parser = JSON->new->allow_nonref;
 
 # -
 
-my $query = CGI->new;
 
 print "<body>\n";
 print "<h1>Hello, world!</h1>\n";

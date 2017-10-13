@@ -44,9 +44,8 @@ public class ContentResolverEventHandler {
             final PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
             Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(sw.toString()).build();
+            log.trace("Throwable response: {}", response);
             return response;
-
         }
     }
-
 }

@@ -36,6 +36,8 @@
         <module>it</module>
         <module>mocksumma</module>
         <module>mocksumma-ide</module>
+        <!--
+        -->
         <module>mockticketservicecontentresolver</module>
         <module>mockticketservicecontentresolver-ide</module>
     </modules>
