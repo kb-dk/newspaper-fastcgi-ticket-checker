@@ -2,8 +2,8 @@ version: '2' # https://docs.docker.com/compose/compose-file/compose-file-v2/
 
 services:
   web:
-    build: kb-centos-httpd-docker/
-    image: kb/centos-httpd 
+    build: kb-centos-httpd-docker
+    image: kb/centos-httpd
     ports:
     - "8080:80"
     links: [memcached, mocksumma, mockticketservice]
@@ -20,15 +20,14 @@ services:
     - ./docker/newspaper_statistics.py.cfg:/var/www/newspaper_statistics.py.cfg
 
   mocksumma:
-    build: mocksumma/
+    build:
+      context: .  # to be able to resolve parent pom.
+      dockerfile: mocksumma/Dockerfile
     image: kb/mocksumma
     ports:
     - "56808:56808"
     expose: [56808]
-    volumes:
-    # "ro" read/only attribute does not work on MacOS 10.13
-    - ./mocksumma/target/mocksumma-1.0-SNAPSHOT.jar:/mocksumma.jar
-    command: "java --add-modules java.se.ee -jar /mocksumma.jar 'http://0.0.0.0:56808/mediehub/search/services/SearchWS'"
+
 
   mockticketservice:
     build: mockticketservicecontentresolver/

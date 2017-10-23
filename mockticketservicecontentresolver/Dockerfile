@@ -3,8 +3,9 @@ FROM maven:3-jdk-9-slim as app
 MAINTAINER tra@kb.dk
 WORKDIR /usr/src/root/app
 
+# context is root of project, not where Dockerfile is found to be able to resolve all
 COPY pom.xml .
-´RUN mvn -B -f pom.xml -s /usr/share/maven/ref/settings-docker.xml dependency:resolve
+RUN mvn -B -f pom.xml -s /usr/share/maven/ref/settings-docker.xml dependency:resolve
 
 COPY . .
 RUN mvn -B -s /usr/share/maven/ref/settings-docker.xml package -DskipTests
