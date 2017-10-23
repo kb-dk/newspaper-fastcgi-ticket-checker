@@ -1,5 +1,4 @@
-# -slim because of https://github.com/carlossg/docker-maven/issues/50
-FROM maven:3-jdk-9-slim as app
+FROM maven:3-jdk-9-with-newspaper-fastcgi-parent as app
 MAINTAINER tra@kb.dk
 WORKDIR /usr/src/app
 
