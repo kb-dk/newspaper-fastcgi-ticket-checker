@@ -10,7 +10,7 @@
 
 
 # http://perldoc.perl.org/DB_File.html#A-Simple-Example
-    
+
 use warnings;
 use strict;
 #use DB_File;
@@ -27,12 +27,12 @@ my $UUID_PREFIX = $ARGV[0] or #
 while (<STDIN>) {
     my ($uuid) = /([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/;
     my $key = $UUID_PREFIX . $uuid;
-    
-#    if (!defined $h{$key}) {
+
+    #    if (!defined $h{$key}) {
     my $content = get("http://iapetus:9311/content-resolver/content?id=$key"); # FIXME: Better conf.
     print $content;
-    
-#    $h{$key} = $content;
-#    }
-#    print $h{$key};
+
+    #    $h{$key} = $content;
+    #    }
+    #    print $h{$key};
 }

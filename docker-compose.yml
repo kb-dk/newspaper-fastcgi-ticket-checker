@@ -1,23 +1,55 @@
-version: '2' # https://docs.docker.com/compose/compose-file/compose-file-v2/
+#version: '2' # https://docs.docker.com/compose/compose-file/compose-file-v2/
+
+version: "3" # https://docs.docker.com/compose/compose-file/
 
 services:
   web:
-    build: kb-centos-httpd-docker/
-    image: kb/centos-httpd 
+    build: kb-centos-httpd-docker
+    image: kb/centos-httpd
     ports:
     - "8080:80"
-    links: [memcached]
+    links: [memcached, mocksumma, mockticketservice]
     volumes:
     - ./docker/httpd.conf:/etc/httpd/conf/httpd.conf
     - ./docker/newspaper-fcgi.conf:/etc/httpd/conf.d/newspaper-fcgi.conf
     - ./docker/newspaper-statistics.conf:/etc/httpd/conf.d/newspaper-statistics.conf
     - ./fcgid-access-checker:/fcgid-access-checker
     - ./docker:/docker
+    - ./docker/webroot:/var/www/html/
+    - ./docker/webprotected:/var/www/html/protected/
+    - ./docker/cgi-bin:/var/www/cgi-bin
     - ./stats/src/main/scripts/statistics/:/var/www/html/statistics/
     - ./docker/newspaper_statistics.py.cfg:/var/www/newspaper_statistics.py.cfg
-    
+
+  mocksumma:
+    build:
+      context: .  # to be able to resolve parent pom.
+      dockerfile: mocksumma/Dockerfile
+    #extra_hosts:
+    #  - "maven-nexus:1.2.3.4"
+    #  - "repo.maven-apache.org:localhost"
+
+    image: kb/mocksumma
+    ports:
+    - "56808:56808"
+    expose: [56808]
+
+
+  mockticketservice:
+    build:
+      context: . # to be able to resolve parent pom.
+      dockerfile: mockticketservicecontentresolver/Dockerfile
+    image: kb/mockticketservicecontentresolver
+    # http://localhost:7950/mock/issueTicket?id=doms_aviser_page:uuid:11111111-1111-1111-1111-111111111111&type=Stream&ipAddress=172.20.0.1&SBIPRoleMapper=inhouse
+    ports:
+    - "7950:7950"
+    expose: [7950]
+    links: [memcached]
+
   memcached:
     # https://hub.docker.com/_/memcached/
     image: memcached:alpine
+    ports: ["11211:11211"]
     command: "memcached -vv"
+    # command: "memcached"
 
