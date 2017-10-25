@@ -1,4 +1,6 @@
-version: '2' # https://docs.docker.com/compose/compose-file/compose-file-v2/
+#version: '2' # https://docs.docker.com/compose/compose-file/compose-file-v2/
+
+version: "3" # https://docs.docker.com/compose/compose-file/
 
 services:
   web:
@@ -23,6 +25,10 @@ services:
     build:
       context: .  # to be able to resolve parent pom.
       dockerfile: mocksumma/Dockerfile
+    #extra_hosts:
+    #  - "maven-nexus:1.2.3.4"
+    #  - "repo.maven-apache.org:localhost"
+
     image: kb/mocksumma
     ports:
     - "56808:56808"
@@ -30,9 +36,10 @@ services:
 
 
   mockticketservice:
-    build: mockticketservicecontentresolver/
+    build:
+      context: . # to be able to resolve parent pom.
+      dockerfile: mockticketservicecontentresolver/Dockerfile
     image: kb/mockticketservicecontentresolver
-    # Magic module incarnation for Jersey under Java 9 pending.  Hence Java 8 container.
     # http://localhost:7950/mock/issueTicket?id=doms_aviser_page:uuid:11111111-1111-1111-1111-111111111111&type=Stream&ipAddress=172.20.0.1&SBIPRoleMapper=inhouse
     ports:
     - "7950:7950"

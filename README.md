@@ -35,7 +35,9 @@ adding writing the usage log.  TRA then updated the sources for Perl
 Statistics of usage logs are processed by 
 https://github.com/statsbiblioteket/newspaper-usage-statistics
 
-From version 0.4 development is facilitated using Docker!
+From version 0.4 development is facilitated using Docker CE!  Note:
+docker 1.13 or earlier does not understand the multi-build facility used with
+the Maven builds.
 
 To build the necessary images:
 

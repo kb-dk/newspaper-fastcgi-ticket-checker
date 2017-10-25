@@ -1,8 +1,11 @@
 # -slim because of https://github.com/carlossg/docker-maven/issues/50
 FROM maven:3-jdk-9-slim as app
 MAINTAINER tra@kb.dk
-WORKDIR /usr/src/app
 
+# Mirror Nexus for caching half the internet.   -s /usr/share/maven/ref/settings-docker.xml not used.
+COPY docker-settings.xml /root/.m2/settings.xml
+
+WORKDIR /usr/src/app
 # Prepopulate - add more as needed (no pom.xml at this time)
 RUN mvn -B compiler:help
 
@@ -17,10 +20,10 @@ COPY mockticketservicecontentresolver-ide/pom.xml mockticketservicecontentresolv
 
 RUN find . -type f -print
 
-RUN mvn -B -fae -s /usr/share/maven/ref/settings-docker.xml -f mocksumma/pom.xml dependency:go-offline
+RUN mvn -B -fae -f mocksumma/pom.xml dependency:go-offline
 
 COPY . .
-RUN mvn -B -fae -s /usr/share/maven/ref/settings-docker.xml -f mocksumma/pom.xml package -DskipTests
+RUN mvn -B -fae -f mocksumma/pom.xml package -DskipTests
 RUN find . -type f -print
 
 
