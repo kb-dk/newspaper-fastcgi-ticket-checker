@@ -53,3 +53,11 @@ services:
     command: "memcached -vv"
     # command: "memcached"
 
+  # Temporary
+  bitrepository:
+    build:
+      context: .
+      dockerfile: bitrepository/Dockerfile
+    image: kb/bitrepository-reference
+
+
