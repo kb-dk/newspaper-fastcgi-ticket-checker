@@ -52,7 +52,7 @@ services:
       dockerfile: mockticketservicecontentresolver/Dockerfile
     image: kb/licensemodule
     ports:
-    - "9612:9612"
+    - "9612:8080"
     expose: [9612]
 
   memcached:

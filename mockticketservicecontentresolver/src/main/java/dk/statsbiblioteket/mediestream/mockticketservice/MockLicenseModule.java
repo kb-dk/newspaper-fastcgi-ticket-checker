@@ -1,10 +1,8 @@
 package dk.statsbiblioteket.mediestream.mockticketservice;
 
 
-import dk.statsbiblioteket.mediestream.mockticketservice.authorization.AuthorizationRequest;
-import dk.statsbiblioteket.mediestream.mockticketservice.authorization.AuthorizationResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import dk.statsbiblioteket.mediestream.mockticketservice.authorization.CheckAccessForIdsInputDTO;
+import dk.statsbiblioteket.mediestream.mockticketservice.authorization.CheckAccessForIdsOutputDTO;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -16,30 +14,29 @@ import java.util.Objects;
 /**
  * https://github.com/statsbiblioteket/ticket-system/blob/master/ticket-system-libs/src/main/java/dk/statsbiblioteket/medieplatform/ticketsystem/Authorization.java#L48
  */
-@Path("checkAccessForIds")
+@Path("/")
 public class MockLicenseModule {
-
-    Logger log = LoggerFactory.getLogger(getClass());
 
     /**
      * https://github.com/statsbiblioteket/licensemodule/blob/master/src/main/java/dk/statsbiblioteket/doms/licensemodule/service/LicenseModuleResource.java#L62
      */
     @POST
     @Consumes(MediaType.TEXT_XML)
+    @Path("checkAccessForIds")
     @Produces(MediaType.TEXT_XML)
-    public AuthorizationResponse checkAccessForIds(AuthorizationRequest input) {
+    public CheckAccessForIdsOutputDTO checkAccessForIds(CheckAccessForIdsInputDTO input) {
         Objects.requireNonNull(input, "auth request");
-        Objects.requireNonNull(input.getResources(), "id");
-        Objects.requireNonNull(input.getType(), "type");
-        Objects.requireNonNull(input.getUserAttributes(), "user attributes");
+        Objects.requireNonNull(input.getIds(), "id");
+        Objects.requireNonNull(input.getPresentationType(), "type");
+        Objects.requireNonNull(input.getAttributes(), "user attributes");
 
-        AuthorizationResponse response = new AuthorizationResponse();
+        CheckAccessForIdsOutputDTO response = new CheckAccessForIdsOutputDTO();
 
-        response.setType(input.getType());
+        response.setPresentationType(input.getPresentationType());
         response.setQuery("Mock Solr query");
 
         //Grant access to all all the time forever and ever
-        response.getResources().addAll(input.getResources());
+        response.setAccessIds(input.getIds());
 
         return response;
     }
