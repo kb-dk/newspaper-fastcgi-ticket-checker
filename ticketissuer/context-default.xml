@@ -1,7 +1,7 @@
 <Context>
 
 
-    <Parameter name="dk.statsbiblioteket.medieplatform.ticketsystem.auth-checker" value="http://licensemodule:9612/licensemodule/services/" override="false"/>
+    <Parameter name="dk.statsbiblioteket.medieplatform.ticketsystem.auth-checker" value="http://licensemodule:8080/licensemodule/services/" override="false"/>
 
     <Parameter name="dk.statsbiblioteket.medieplatform.ticketsystem.timeToLive" value="1200" override="false"/>
 

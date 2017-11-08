@@ -51,9 +51,7 @@ services:
       context: . # to be able to resolve parent pom.
       dockerfile: mockticketservicecontentresolver/Dockerfile
     image: kb/licensemodule
-    ports:
-    - "9612:8080"
-    expose: [9612]
+    expose: [8080]
 
   memcached:
     # https://hub.docker.com/_/memcached/
