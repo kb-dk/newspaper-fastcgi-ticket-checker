@@ -19,7 +19,7 @@ import java.util.function.Function;
  */
 public class MockTicketServiceContentResolverMain {
 
-    public static final String TICKETSERVICE_BASEURL = "ticketservice.baseurl";
+    public static final String LICENSEMODULE_BASEURL = "licensemodule.baseurl";
 
     public interface Tool extends Callable<String> {
 
@@ -31,7 +31,7 @@ public class MockTicketServiceContentResolverMain {
         Function<ConfigurationMap, Tool> function = (ConfigurationMap map) -> {
 
             URI baseURI = UriBuilder.fromUri(
-                    map.get(TICKETSERVICE_BASEURL).orElseThrow(() -> new ConfigurationKeyNotSetException(TICKETSERVICE_BASEURL))
+                    map.get(LICENSEMODULE_BASEURL).orElseThrow(() -> new ConfigurationKeyNotSetException(LICENSEMODULE_BASEURL))
             ).build();
 
             // Create @Named-key-value pairs in Jersey injections from ConfigurationMap. Cannot use lambda for this.
@@ -49,8 +49,7 @@ public class MockTicketServiceContentResolverMain {
             };
 
             ResourceConfig config = new ResourceConfig();
-            config.register(TicketServiceEventHandler.class);
-            config.register(ContentResolverEventHandler.class);
+            config.register(MockLicenseModule.class);
             config.register(namedKeyValueBinder);
             Tool tool =  () -> {
                 HttpServer httpServer = JdkHttpServerFactory.createHttpServer(baseURI, config); // launches non-daemon server thread and returns.

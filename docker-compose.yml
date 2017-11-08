@@ -8,7 +8,7 @@ services:
     image: kb/centos-httpd
     ports:
     - "8080:80"
-    links: [memcached, mocksumma, mockticketservice]
+    links: [memcached, mocksumma, ticketissuer]
     volumes:
     - ./docker/httpd.conf:/etc/httpd/conf/httpd.conf
     - ./docker/newspaper-fcgi.conf:/etc/httpd/conf.d/newspaper-fcgi.conf
@@ -34,17 +34,26 @@ services:
     - "56808:56808"
     expose: [56808]
 
+  ticketissuer:
+    build:
+      context: .
+      dockerfile: ticketissuer/Dockerfile
+    image: kb/ticketissuer
+    # http://localhost:7950/mock/issueTicket?id=doms_aviser_page:uuid:11111111-1111-1111-1111-111111111111&type=Stream&ipAddress=172.20.0.1&SBIPRoleMapper=inhouse
+    ports:
+      - "7950:8080"
+    links: [memcached, licensemodule]
+    expose: [7950]
 
-  mockticketservice:
+
+  licensemodule:
     build:
       context: . # to be able to resolve parent pom.
       dockerfile: mockticketservicecontentresolver/Dockerfile
-    image: kb/mockticketservicecontentresolver
-    # http://localhost:7950/mock/issueTicket?id=doms_aviser_page:uuid:11111111-1111-1111-1111-111111111111&type=Stream&ipAddress=172.20.0.1&SBIPRoleMapper=inhouse
+    image: kb/licensemodule
     ports:
-    - "7950:7950"
-    expose: [7950]
-    links: [memcached]
+    - "9612:9612"
+    expose: [9612]
 
   memcached:
     # https://hub.docker.com/_/memcached/
