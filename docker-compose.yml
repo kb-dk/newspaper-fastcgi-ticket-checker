@@ -28,7 +28,6 @@ services:
     #extra_hosts:
     #  - "maven-nexus:1.2.3.4"
     #  - "repo.maven-apache.org:localhost"
-
     image: kb/mocksumma
     ports:
     - "56808:56808"
@@ -36,10 +35,10 @@ services:
 
   ticketissuer:
     build:
-      context: .
+      context: . # to be able to resolve parent pom.
       dockerfile: ticketissuer/Dockerfile
     image: kb/ticketissuer
-    # http://localhost:7950/mock/issueTicket?id=doms_aviser_page:uuid:11111111-1111-1111-1111-111111111111&type=Stream&ipAddress=172.20.0.1&SBIPRoleMapper=inhouse
+    # http://localhost:7950/ticket-system-service/tickets/issueTicket?id=doms_aviser_page:uuid:11111111-1111-1111-1111-111111111111&type=Stream&ipAddress=172.20.0.1&SBIPRoleMapper=inhouse
     ports:
       - "7950:8080"
     links: [memcached, licensemodule]
@@ -51,6 +50,9 @@ services:
       context: . # to be able to resolve parent pom.
       dockerfile: mockticketservicecontentresolver/Dockerfile
     image: kb/licensemodule
+    # curl -H "Accept: text/xml" -H "Content-Type: text/xml" http://localhost:9612/licensemodule/services/checkAccessForIds -d '<checkAccessForIdsInputDTO><attributes><attribute>SBIPRoleMapper</attribute><values>inhouse</values>  </attributes><ids>doms_aviser_page:uuid:cca6e5a6-a635-49f0-8f26-0e05ac9dd8c2</ids><presentationType>Stream</presentationType></checkAccessForIdsInputDTO>'
+    volumes:
+     - ./ticketissuer/context-default.xml:/usr/local/tomcat/conf/Catalina/localhost/context.xml.default
     expose: [8080]
 
   memcached:

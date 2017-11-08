@@ -12,7 +12,5 @@ FROM tomcat:8.5-jre8
 
 WORKDIR /app
 
-COPY ticketissuer/context-default.xml /usr/local/tomcat/conf/Catalina/localhost/context.xml.default
-
 COPY --from=app /usr/src/app/target/dependency/*.war /usr/local/tomcat/webapps/
 
