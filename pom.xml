@@ -47,6 +47,5 @@
         <!--
         -->
         <module>mockticketservicecontentresolver</module>
-        <module>mockticketservicecontentresolver-ide</module>
     </modules>
 </project>

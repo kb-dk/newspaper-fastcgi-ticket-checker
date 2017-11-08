@@ -13,5 +13,5 @@ RUN mvn -B -fae --projects mockticketservicecontentresolver --also-make package 
 #RUN find . -type f -print
 # -- run
 
-FROM tomcat:8.5-jre8
-COPY --from=app /usr/src/app/mockticketservicecontentresolver/target/mockticketservicecontentresolver-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/licensemodule.war
+FROM jetty:9.4-jre8
+COPY --from=app /usr/src/app/mockticketservicecontentresolver/target/mockticketservicecontentresolver-*.war /var/lib/jetty/webapps/licensemodule.war
