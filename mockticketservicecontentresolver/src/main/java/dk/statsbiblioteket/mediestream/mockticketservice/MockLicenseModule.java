@@ -9,7 +9,10 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * https://github.com/statsbiblioteket/ticket-system/blob/master/ticket-system-libs/src/main/java/dk/statsbiblioteket/medieplatform/ticketsystem/Authorization.java#L48
@@ -35,8 +38,13 @@ public class MockLicenseModule {
         response.setPresentationType(input.getPresentationType());
         response.setQuery("Mock Solr query");
 
-        //Grant access to all all the time forever and ever
-        response.setAccessIds(input.getIds());
+
+        // License module returns those DomsId's which the license allows access.  Here
+        // we just select on the domsIds themselves.  In the real license module we compare
+        // the user attributes to properties on the actual items in DOMS.
+        List<String> accessableDomsIDs = input.getIds().stream().filter(id -> !id.endsWith("1")).collect(Collectors.toList());
+        response.setAccessIds(new ArrayList<>(accessableDomsIDs));
+
 
         return response;
     }
