@@ -16,7 +16,6 @@ COPY it/pom.xml it/
 COPY mocksumma/pom.xml mocksumma/
 COPY mocksumma-ide/pom.xml mocksumma-ide/
 COPY mockticketservicecontentresolver/pom.xml mockticketservicecontentresolver/
-COPY mockticketservicecontentresolver-ide/pom.xml mockticketservicecontentresolver-ide/
 
 RUN find . -type f -print
 
