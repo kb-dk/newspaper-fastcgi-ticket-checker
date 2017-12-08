@@ -21,6 +21,9 @@ docker run -p 8081:8081 -\
     Unfortunately we also have needed artifacts in our sbprojects nexus which again makes problems
     with the Nexus mirror proxy.  I found the following steps work with OSS 3.6.0-02:
 
+    SEE nexus/execute.sh which does all of this for you
+    The default docker bridge is 172.17.0/24 and the host is thus 172.17.0.1. This works both inside and outside containers
+
     * Open http://localhost:8081
     * Sign into the nexus docker web interface as admin/admin123  (upper right corner)
     * Click on cog wheel in top bar (Server administration and configuration)
@@ -34,18 +37,22 @@ docker run -p 8081:8081 -\
     * Use "sbforge_central" as the name, and add "maven-central" and "sbforge" to the Members pane, and click "Create Repository".
     * Note:  The repository list now lists "sbforge_central" too.
 
-    Note that my external IP-number is currently hardcoded below.  Replace it with your own external IP-number.
+
 
     FIXME:  Automate all of the above.
+
+
     -->
     <mirrors>
         <mirror>
             <id>local-nexus</id>
             <name>Local Nexus</name>
             <!-- Host external IP number -->
-            <url>http://172.18.95.105:8081/repository/sbforge_central/</url>
+            <url>http://172.17.0.1:8081/repository/sbforge_central/</url>
             <mirrorOf>central</mirrorOf>
         </mirror>
     </mirrors>
     <localRepository>/usr/share/maven/ref/repository</localRepository>
 </settings>
+
+

@@ -1,0 +1,5 @@
+{
+  "name": "sbforge_central",
+  "type": "groovy",
+  "content": "repository.createMavenGroup('sbforge_central', ['sbforge','maven-central'])"
+}
