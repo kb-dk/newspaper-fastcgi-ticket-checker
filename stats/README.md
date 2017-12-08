@@ -46,3 +46,9 @@ To make a release:
 * Place the file in newspaper@achernar:releases/
 
 kfc 2016-09-13
+
+For Ubuntu 16.04 "sudo apt-get install python-simplejson python-suds python-lxml"
+is needed.
+
+/tra 2017-12-09
+
