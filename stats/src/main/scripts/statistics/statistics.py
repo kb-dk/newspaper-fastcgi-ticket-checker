@@ -69,7 +69,9 @@ mediestream_wsdl = config.get("cgi", "mediestream_wsdl")
 # We need to disable the cache to avoid jumping through SELinux hoops but
 # suds is a pain in the a** and has no way to properly disable caching
 # This just crudely redefines the default ObjectCache() to be NoCache()
+# noinspection PyUnusedLocal
 def ObjectCache(**kw):
+    # noinspection PyUnresolvedReferences
     return suds.cache.NoCache()
 
 
@@ -116,9 +118,9 @@ fieldnames = ["Timestamp", "Type", "AvisID", "Avis", "Adgangstype", "Udgivelsest
               "SBIPRoleMapper", "MediestreamFullAccess", "UUID"]
 
 if not commandLine:
-    filename = "newspaper_stat-" + start_str + "-" + end_str;
+    filename = "newspaper_stat-" + start_str + "-" + end_str
     if requiredType != "":
-        filename = filename + "-" + requiredType;
+        filename = filename + "-" + requiredType
     print("Content-type: text/csv")
     print("Content-disposition: attachment; filename=" + filename + ".csv")
     print("")
@@ -138,7 +140,7 @@ previously_seen_uniqueID = set()  # only process ticket/domsID combos once
 
 for statistics_file_name in glob.iglob(statistics_file_pattern):
 
-    if os.path.isfile(statistics_file_name) == False:
+    if not os.path.isfile(statistics_file_name):
         continue
 
     statistics_file = open(statistics_file_name, "rb")
@@ -188,6 +190,7 @@ for statistics_file_name in glob.iglob(statistics_file_pattern):
             summa_resource = summa_resource_cache[summa_resource_cache_key]
         else:
             if downloadPDF:
+                # noinspection PyDictCreation
                 query = {}
                 query["search.document.query"] = "editionUUID:\"doms_aviser_edition:uuid:" + resource_id + "\""
                 query["search.document.maxrecords"] = "20"
@@ -198,6 +201,7 @@ for statistics_file_name in glob.iglob(statistics_file_pattern):
                 query["group.field"] = "editionUUID"
                 query["search.document.collectdocids"] = "false"
             else:
+                # noinspection PyDictCreation
                 query = {}
                 query["search.document.query"] = "pageUUID:\"doms_aviser_page:uuid:" + resource_id + "\""
                 query["search.document.maxrecords"] = "20"
@@ -229,6 +233,7 @@ for statistics_file_name in glob.iglob(statistics_file_pattern):
 
         # -- ready to generate output
 
+        # noinspection PyDictCreation
         outputLine = {}
 
         outputLine["Type"] = "info:fedora/doms:Newspaper_Collection"
