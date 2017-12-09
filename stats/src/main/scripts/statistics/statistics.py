@@ -144,7 +144,8 @@ summa_resource_cache_max = 10000  # number of items to cache, when reached cache
 
 previously_seen_uniqueID = set()  # only process ticket/domsID combos once
 
-for statistics_file_name in glob.iglob(statistics_file_pattern):
+# https://stackoverflow.com/a/13335919/53897
+for statistics_file_name in sorted(glob.iglob(statistics_file_pattern)):
 
     if not os.path.isfile(statistics_file_name):
         continue
