@@ -44,6 +44,9 @@ if commandLine:
         keyvalue = arg.partition("=")
         if (keyvalue[2]) > 0:
             parameters[keyvalue[0]] = keyvalue[2]
+# Untested, so disabled:
+#    if ("CONFIG_FILE" in parameters):
+#        config_file_name = parameters.get("CONFIG_FILE")
 else:
     # we are a cgi script
     cgitb.enable()
@@ -64,7 +67,8 @@ config.read(config_file_name)
 # -- create web service client from WSDL url. see https://fedorahosted.org/suds/wiki/Documentation
 
 mediestream_wsdl = config.get("cgi", "mediestream_wsdl")
-
+if not mediestream_wsdl:
+    raise ValueError("no value for [cgi] mediestream_wsdl")
 
 # We need to disable the cache to avoid jumping through SELinux hoops but
 # suds is a pain in the a** and has no way to properly disable caching
@@ -88,17 +92,19 @@ else:
 if "fromDate" in parameters:
     start_str = parameters["fromDate"]  # "2013-06-15"
 else:
-    start_str = "2013-06-01"
+    start_str = "2017-06-01"
 
 if "toDate" in parameters:
     end_str = parameters["toDate"]
 else:
-    end_str = "2015-07-01"
+    end_str = "2018-07-01"
 
 # Example: d68a0380-012a-4cd8-8e5b-37adf6c2d47f (optionally trailed by a ".fileending")
 re_doms_id_from_url = re.compile("([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})(\.[a-zA-Z0-9]*)?$")
 
 statistics_file_pattern = config.get("cgi", "statistics_file_name_pattern")
+if not statistics_file_pattern:
+    raise ValueError("no value for [cgi] statistics_file_name_pattern")
 
 # http://stackoverflow.com/a/2997846/53897 - 10:00 is to avoid timezone issues in general.
 start_date = datetime.date.fromtimestamp(time.mktime(time.strptime(start_str + " 10:00", '%Y-%m-%d %H:%M')))
@@ -244,7 +250,7 @@ for statistics_file_name in glob.iglob(statistics_file_pattern):
 
         outputLine["Timestamp"] = datetime.datetime.fromtimestamp(entry["dateTime"]).strftime("%Y-%m-%d %H:%M:%S")
 
-        outputLine["Klient"] = entry["remote_ip"]
+        outputLine["Klient"] = "-" # disabled to conform to logging law - was:  entry["remote_ip"]
 
         # print(ET.tostring(shortFormat))
         outputLine["AvisID"] = (summa_resource.xpath(

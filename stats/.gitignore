@@ -3,3 +3,4 @@
 *.ipr
 *.iws
 *~
+/src/main/newspaper_statistics.py.cfg
