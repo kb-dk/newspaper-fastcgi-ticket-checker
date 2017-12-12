@@ -35,7 +35,9 @@ encoding = "utf-8"  # What to use for output
 
 # ---
 
-commandLine = len(sys.argv) > 1  # script name is always #0
+# If parameters this is command line. (may look at SCRIPT_* environment variables instead)
+
+commandLine = len(sys.argv) > 1
 
 if commandLine:
     # parse command line arguments on form "fromDate=2015-03-03" as map
@@ -44,11 +46,8 @@ if commandLine:
         keyvalue = arg.partition("=")
         if (keyvalue[2]) > 0:
             parameters[keyvalue[0]] = keyvalue[2]
-# Untested, so disabled:
-#    if ("CONFIG_FILE" in parameters):
-#        config_file_name = parameters.get("CONFIG_FILE")
 else:
-    # we are a cgi script
+    # We are a cgi script
     cgitb.enable()
     fieldStorage = cgi.FieldStorage()
     parameters = dict((key, fieldStorage.getvalue(key)) for key in fieldStorage.keys())
@@ -70,6 +69,8 @@ mediestream_wsdl = config.get("cgi", "mediestream_wsdl")
 if not mediestream_wsdl:
     raise ValueError("no value for [cgi] mediestream_wsdl")
 
+
+# FIXME:  Explain below problem better.
 # We need to disable the cache to avoid jumping through SELinux hoops but
 # suds is a pain in the a** and has no way to properly disable caching
 # This just crudely redefines the default ObjectCache() to be NoCache()
@@ -163,7 +164,7 @@ for statistics_file_name in sorted(glob.iglob(statistics_file_pattern)):
         try:
             entry = json.loads(loggedJson)
         except:
-            print("Bad JSON skipped: ", loggedJson, file=sys.stderr)
+            print("Bad JSON skipped from ", statistics_file_name, ": ", loggedJson, file=sys.stderr)
             continue
 
             # -- line to be considered?
@@ -220,6 +221,7 @@ for statistics_file_name in sorted(glob.iglob(statistics_file_pattern)):
                 query["search.document.collectdocids"] = "false"
 
             queryJSON = json.dumps(query)
+            # FIXME:  May time out.  Handle that gracefully.
             summa_resource_text = mediestream_webservice.service.directJSON(queryJSON)
             # print(summa_resource_text.encode(encoding))
 
@@ -251,37 +253,46 @@ for statistics_file_name in sorted(glob.iglob(statistics_file_pattern)):
 
         outputLine["Timestamp"] = datetime.datetime.fromtimestamp(entry["dateTime"]).strftime("%Y-%m-%d %H:%M:%S")
 
-        outputLine["Klient"] = "-" # disabled to conform to logging law - was:  entry["remote_ip"]
+        outputLine["Klient"] = "-"  # disabled to conform to logging law - was:  entry["remote_ip"]
 
         # print(ET.tostring(shortFormat))
         outputLine["AvisID"] = (summa_resource.xpath(
             "/responsecollection/response/documentresult/group/record[1]/field[@name='familyId']/text()") or [""])[0]
+
         outputLine["Avis"] = \
-        (shortFormat.xpath("rdf:RDF/rdf:Description/newspaperTitle/text()", namespaces=namespaces) or [""])[0]
+            (shortFormat.xpath("rdf:RDF/rdf:Description/newspaperTitle/text()", namespaces=namespaces) or [""])[0]
+
         outputLine["Udgivelsestidspunkt"] = \
-        (shortFormat.xpath("rdf:RDF/rdf:Description/dateTime/text()", namespaces=namespaces) or [""])[0]
+            (shortFormat.xpath("rdf:RDF/rdf:Description/dateTime/text()", namespaces=namespaces) or [""])[0]
+
         outputLine["Udgivelsesnummer"] = \
-        (shortFormat.xpath("rdf:RDF/rdf:Description/newspaperEdition/text()", namespaces=namespaces) or [""])[0]
+            (shortFormat.xpath("rdf:RDF/rdf:Description/newspaperEdition/text()", namespaces=namespaces) or [""])[0]
 
         outputLine["schacHomeOrganization"] = ", ".join(
             e for e in entry["userAttributes"].get("schacHomeOrganization", {}))
+
         outputLine["eduPersonPrimaryAffiliation"] = ", ".join(
             e for e in entry["userAttributes"].get("eduPersonPrimaryAffiliation", {}))
+
         outputLine["eduPersonScopedAffiliation"] = ", ".join(
             e for e in entry["userAttributes"].get("eduPersonScopedAffiliation", {}))
+
         outputLine["eduPersonPrincipalName"] = ", ".join(
             e for e in entry["userAttributes"].get("eduPersonPrincipalName", {}))
+
         outputLine["eduPersonTargetedID"] = ", ".join(e for e in entry["userAttributes"].get("eduPersonTargetedID", {}))
+
         outputLine["SBIPRoleMapper"] = ", ".join(e for e in entry["userAttributes"].get("SBIPRoleMapper", {}))
+
         outputLine["MediestreamFullAccess"] = ", ".join(
             e for e in entry["userAttributes"].get("MediestreamFullAccess", {}))
 
         if not downloadPDF:
             # Does not make sense on editions
             outputLine["Sektion"] = \
-            (shortFormat.xpath("rdf:RDF/rdf:Description/newspaperSection/text()", namespaces=namespaces) or [""])[0]
+                (shortFormat.xpath("rdf:RDF/rdf:Description/newspaperSection/text()", namespaces=namespaces) or [""])[0]
             outputLine["Sidenummer"] = \
-            (shortFormat.xpath("rdf:RDF/rdf:Description/newspaperPage/text()", namespaces=namespaces) or [""])[0]
+                (shortFormat.xpath("rdf:RDF/rdf:Description/newspaperPage/text()", namespaces=namespaces) or [""])[0]
 
         encodedOutputLine = dict((key, outputLine[key].encode(encoding)) for key in outputLine.keys())
         result_dict_writer.writerow(encodedOutputLine)
