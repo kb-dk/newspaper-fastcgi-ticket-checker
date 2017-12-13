@@ -1,4 +1,6 @@
-#!/usr/bin/env python2
+#!/usr/bin/python
+
+#--!/usr/bin/env python2
 
 # https://sbprojects.statsbiblioteket.dk/jira/browse/MSAVIS-4 - post process statistics log.
 #

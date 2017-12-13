@@ -38,6 +38,7 @@ To make a release:
 * Tag the version in git
 * Run `make-tarball.sh newspaper-usage-statistics-<version>` to tar up and gzip the following
     - src/main/scripts/statistics
+    - src/main/newspaper_statistics.py.cfg-example
     - README.md
     - CHANGELOG.md
     
