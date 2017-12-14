@@ -15,8 +15,8 @@ then
 fi
 
 mkdir $DIR
-cp -v CHANGELOG.md README.md src/main/newspaper_statistics.py.cfg-example $DIR
-cp -v -r src/main/scripts/statistics $DIR
+cp CHANGELOG.md README.md src/main/newspaper_statistics.py.cfg-example $DIR
+cp -r src/main/scripts/statistics $DIR
 tar czf $DIR.tgz $DIR
 rm -rf $DIR
 ls -l $DIR*

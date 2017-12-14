@@ -35,8 +35,8 @@ python-suds"
 To make a release:
 
 * Update changelog
-* Tag the version in git
-* Run `make-tarball.sh newspaper-usage-statistics-<version>` to tar up and gzip the following
+* Tag the version in git, using `git tag newspaper-usage-statistics-<version>`
+* Run `sh make-tarball.sh newspaper-usage-statistics-<version>` to tar up and gzip the following
     - src/main/scripts/statistics
     - src/main/newspaper_statistics.py.cfg-example
     - README.md
@@ -44,6 +44,8 @@ To make a release:
     
   into `newspaper-usage-statistics-<version>.tgz`.
 
+  You may be able to simply use `sh make-tarball.sh $(git tag -l --sort=-committerdate |head -1)` 
+    
 * Place the file in newspaper@achernar:releases/
 
 kfc 2016-09-13, /tra 2017-12-12
