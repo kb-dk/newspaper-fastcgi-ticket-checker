@@ -19,6 +19,7 @@ import cgitb
 import csv
 import datetime
 import glob
+import gzip
 import json
 import os
 import re
@@ -153,7 +154,11 @@ for statistics_file_name in sorted(glob.iglob(statistics_file_pattern)):
     if not os.path.isfile(statistics_file_name):
         continue
 
-    statistics_file = open(statistics_file_name, "rb")
+    # For now just skip compressed files.
+    if statistics_file_name.endswith(".gz"):
+        statistics_file = gzip.open(statistics_file_name, "rb")
+    else:
+        statistics_file = open(statistics_file_name, "rb")
 
     for line in statistics_file:
 
