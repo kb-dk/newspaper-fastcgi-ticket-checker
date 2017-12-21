@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-#--!/usr/bin/env python2
+# --!/usr/bin/env python2
 
 # https://sbprojects.statsbiblioteket.dk/jira/browse/MSAVIS-4 - post process statistics log.
 #
@@ -93,6 +93,9 @@ if "type" in parameters:
 else:
     requiredType = ""
 
+# Note:  Dates are handled as strings on the form YYYY-MM-DD.  This allows simple
+# lexographic comparisons.
+
 if "fromDate" in parameters:
     start_str = parameters["fromDate"]  # "2013-06-15"
 else:
@@ -151,8 +154,21 @@ previously_seen_uniqueID = set()  # only process ticket/domsID combos once
 # https://stackoverflow.com/a/13335919/53897
 for statistics_file_name in sorted(glob.iglob(statistics_file_pattern)):
 
+    # Log files in production are named:
+    # thumbnails.log
+    # thumbnails.log.2017-10-30.gz
+    # thumbnails.log.2017-10-31
+
     if not os.path.isfile(statistics_file_name):
         continue
+
+    # Only process filenames with a YYYY-MM-DD date if they are in range.
+    filenameDateMatch = re.search(r"\d\d\d\d-\d\d-\d\d", statistics_file_name)
+    if filenameDateMatch:
+        filename_date = datetime.date.fromtimestamp(time.mktime(time.strptime(filenameDateMatch.group() + " 10:00", '%Y-%m-%d %H:%M')))
+        if not start_date <= filename_date <= end_date:
+            # print("Skipping %s" % statistics_file_name)
+            continue
 
     # For now just skip compressed files.
     if statistics_file_name.endswith(".gz"):
@@ -174,7 +190,7 @@ for statistics_file_name in sorted(glob.iglob(statistics_file_pattern)):
             print("Bad JSON skipped from ", statistics_file_name, ": ", loggedJson, file=sys.stderr)
             continue
 
-            # -- line to be considered?
+        # -- line to be considered?
 
         entryDate = datetime.date.fromtimestamp(entry["dateTime"])
 
