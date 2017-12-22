@@ -6,7 +6,13 @@ user data and DOMS information for each asset access check.
 
 This module contains a small Python CGI program which reads the
 generated logs, looks up information and generate a CSV with usage
-information which can be post-processed in Excel.
+information which can be post-processed in Excel.  It can
+also be run directly from the command line.
+
+The script is intented to be clear and easy to debug for a 
+Java programmer unfamiliar with Python.  This mean that many
+results are captured in local variables, and that naming
+may be more Java than Python like.
 
 For development purposes on local machine, copy
 newspaper_statistics.py.cfg-example to
