@@ -95,8 +95,8 @@ else:
 if "chunksize" in parameters:
     chunksize = int(parameters["chunksize"])
 else:
-    #raise ValueError("'chunksize' (maximum size of summa request) must be a numeric parameter.")
-    chunksize = 100 # default to recommended by toes@kb.dk if none given (for backwards compatebility)
+    # raise ValueError("'chunksize' (maximum size of summa request) must be a numeric parameter.")
+    chunksize = 100  # default to recommended by toes@kb.dk if none given (for backwards compatebility)
 
 if "fromDate" in parameters:
     start_str = parameters["fromDate"]  # "2013-06-15"
@@ -157,7 +157,6 @@ previously_seen_uniqueID = set()  # only process ticket/domsID combos once
 
 
 def createOutputLine(response, group_xpath, json_entry):
-
     try:
         shortFormat = response.xpath(
             group_xpath + "record/field[@name='shortformat']/shortrecord")[
@@ -176,7 +175,7 @@ def createOutputLine(response, group_xpath, json_entry):
     # print(ET.tostring(shortFormat))
     avisID_xpath = group_xpath + "record/field[@name='familyId']/text()"
     outputLine["AvisID"] = (response.xpath(avisID_xpath) or [
-                                ""])[0]
+        ""])[0]
     outputLine["Avis"] = \
         (shortFormat.xpath("rdf:RDF/rdf:Description/newspaperTitle/text()", namespaces=namespaces) or [""])[
             0]
@@ -245,21 +244,15 @@ for statistics_file_name in sorted(glob.iglob(statistics_file_pattern)):
     # Read the file in chunks of "chunksize" lines and make a single Summa request for each.
     eof_seen = False
     while not eof_seen:
-        chunk = []
-        while len(chunk) < chunksize:
+        query_keys = []  # for summa batch query
+        lineInformation = []  # processed chunk
+
+        while len(query_keys) < chunksize:
             line = statistics_file.readline()
-            if line:
-                chunk.append(line)
-            else:
+            if not line:
                 eof_seen = True
                 break
 
-        # Here we have at most chunksize lines (fewer if at end of this log file)
-
-        query_keys = []  # for summa batch query
-        r = []  # processed chunk
-
-        for line in chunk:
             # Mon Jun 22 15:28:02 2015: {"resource_id":"...","remote_ip":"...","userAttributes":{...},
             #                            "dateTime":1434979682,"ticket_id":"...","resource_type":"Download"}
 
@@ -300,7 +293,7 @@ for statistics_file_name in sorted(glob.iglob(statistics_file_pattern)):
 
             query_keys.append(query_key)
             tuple = (query_key, entry)
-            r.append(tuple)
+            lineInformation.append(tuple)
 
         # -- Anything to process?
 
@@ -337,8 +330,8 @@ for statistics_file_name in sorted(glob.iglob(statistics_file_pattern)):
         summa_resource = et.parse(BytesIO(bytes(bytearray(summa_resource_text, encoding='utf-8'))))
 
         # reprocess each line
-        for query_key, entry in r:
-            group_xpath =  "/responsecollection/response/documentresult/group[@groupValue='" + query_key + "']/"
+        for query_key, entry in lineInformation:
+            group_xpath = "/responsecollection/response/documentresult/group[@groupValue='" + query_key + "']/"
 
             result = createOutputLine(summa_resource, group_xpath, entry)
 
@@ -352,4 +345,3 @@ for statistics_file_name in sorted(glob.iglob(statistics_file_pattern)):
     # result_file.close() - can't on sys.stdout.
 
 # end - for statistics_name in ...
-
