@@ -95,7 +95,8 @@ else:
 if "chunksize" in parameters:
     chunksize = int(parameters["chunksize"])
 else:
-    raise ValueError("'chunksize' (maximum size of summa request) must be a numeric parameter.")
+    #raise ValueError("'chunksize' (maximum size of summa request) must be a numeric parameter.")
+    chunksize = 100 # default to recommended by toes@kb.dk if none given (for backwards compatebility)
 
 if "fromDate" in parameters:
     start_str = parameters["fromDate"]  # "2013-06-15"
@@ -168,12 +169,12 @@ def createOutputLine(response, group_xpath, json_entry):
     outputLine = {}
     outputLine["Type"] = "info:fedora/doms:Newspaper_Collection"
     outputLine["Adgangstype"] = json_entry["resource_type"]
-    outputLine["UUID"] = resource_id
+    outputLine["UUID"] = json_entry["resource_id"]
     outputLine["Timestamp"] = datetime.datetime.fromtimestamp(json_entry["dateTime"]).strftime(
         "%Y-%m-%d %H:%M:%S")
     outputLine["Klient"] = "-"  # disabled to conform to logging law - was:  entry["remote_ip"]
     # print(ET.tostring(shortFormat))
-    avisID_xpath = group_xpath + "record/field[@name='familyId']/text()";
+    avisID_xpath = group_xpath + "record/field[@name='familyId']/text()"
     outputLine["AvisID"] = (response.xpath(avisID_xpath) or [
                                 ""])[0]
     outputLine["Avis"] = \
