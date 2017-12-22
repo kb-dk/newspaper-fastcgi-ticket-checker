@@ -28,7 +28,7 @@ import suds.client
 import sys
 import time
 from io import BytesIO
-from lxml import etree as ET
+from lxml import etree as et
 
 config_file_name = "../../newspaper_statistics.py.cfg"  # outside web root.
 
@@ -155,13 +155,14 @@ summa_resource_cache_max = 10000  # number of items to cache, when reached cache
 previously_seen_uniqueID = set()  # only process ticket/domsID combos once
 
 
-def createOutputLine(resource, json_entry):
+def createOutputLine(response, group_xpath, json_entry):
+
     try:
-        shortFormat = resource.xpath(
-            "/responsecollection/response/documentresult/group/record/field[@name='shortformat']/shortrecord")[
+        shortFormat = response.xpath(
+            group_xpath + "record/field[@name='shortformat']/shortrecord")[
             0]
     except:
-        shortFormat = ET.Element("empty")
+        shortFormat = et.Element("empty")
     # -- ready to generate output
     # noinspection PyDictCreation
     outputLine = {}
@@ -172,8 +173,8 @@ def createOutputLine(resource, json_entry):
         "%Y-%m-%d %H:%M:%S")
     outputLine["Klient"] = "-"  # disabled to conform to logging law - was:  entry["remote_ip"]
     # print(ET.tostring(shortFormat))
-    outputLine["AvisID"] = (resource.xpath(
-        "/responsecollection/response/documentresult/group/record[1]/field[@name='familyId']/text()") or [
+    avisID_xpath = group_xpath + "record/field[@name='familyId']/text()";
+    outputLine["AvisID"] = (response.xpath(avisID_xpath) or [
                                 ""])[0]
     outputLine["Avis"] = \
         (shortFormat.xpath("rdf:RDF/rdf:Description/newspaperTitle/text()", namespaces=namespaces) or [""])[
@@ -292,15 +293,15 @@ for statistics_file_name in sorted(glob.iglob(statistics_file_pattern)):
                 previously_seen_uniqueID.add(uniqueID)
 
             if downloadPDF:
-                query_key = "\"doms_aviser_edition:uuid:" + resource_id + "\""
+                query_key = "doms_aviser_edition:uuid:" + resource_id
             else:
-                query_key = "\"doms_aviser_page:uuid:" + resource_id + "\""
+                query_key = "doms_aviser_page:uuid:" + resource_id
 
             query_keys.append(query_key)
             tuple = (query_key, entry)
             r.append(tuple)
 
-        # -- chunk processed.  Anything to process?
+        # -- Anything to process?
 
         if len(query_keys) == 0:
             continue
@@ -309,7 +310,7 @@ for statistics_file_name in sorted(glob.iglob(statistics_file_pattern)):
 
         query = {}
         if downloadPDF:
-            query["search.document.query"] = "editionUUID:(%s)" % " OR ".join(query_keys)
+            query["search.document.query"] = "editionUUID:(\"%s\")" % "\" OR \"".join(query_keys)
             query["search.document.maxrecords"] = "%d" % (chunksize * 2)  # all + margin
             query["search.document.startindex"] = "0"
             query["search.document.resultfields"] = "editionUUID, pageUUID, shortformat, familyId"
@@ -318,7 +319,7 @@ for statistics_file_name in sorted(glob.iglob(statistics_file_pattern)):
             query["group.field"] = "editionUUID"
             query["search.document.collectdocids"] = "false"
         else:
-            query["search.document.query"] = "pageUUID:(%s)" % " OR ".join(query_keys)
+            query["search.document.query"] = "pageUUID:(\"%s\")" % "\" OR \"".join(query_keys)
             query["search.document.maxrecords"] = "%d" % (chunksize * 2)  # all + margin
             query["search.document.startindex"] = "0"
             query["search.document.resultfields"] = "pageUUID, shortformat, familyId"
@@ -330,16 +331,24 @@ for statistics_file_name in sorted(glob.iglob(statistics_file_pattern)):
         queryJSON = json.dumps(query)
         # FIXME:  May time out.  Handle that gracefully.
         summa_resource_text = mediestream_webservice.service.directJSON(queryJSON)
-        # print(summa_resource_text.encode(encoding))
 
-        summa_resource = ET.parse(BytesIO(bytes(bytearray(summa_resource_text, encoding='utf-8'))))
+        # Get the ElementTree for the returned XML string.
+        summa_resource = et.parse(BytesIO(bytes(bytearray(summa_resource_text, encoding='utf-8'))))
 
-#    result = createOutputLine(summa_resource, entry)
+        # reprocess each line
+        for query_key, entry in r:
+            group_xpath =  "/responsecollection/response/documentresult/group[@groupValue='" + query_key + "']/"
 
-#    encodedOutputLine = dict((key, result[key].encode(encoding)) for key in result.keys())
-#    result_dict_writer.writerow(encodedOutputLine)
+            result = createOutputLine(summa_resource, group_xpath, entry)
 
-statistics_file.close()
-# result_file.close() - can't on sys.stdout.
+            encodedOutputLine = dict((key, result[key].encode(encoding)) for key in result.keys())
+            result_dict_writer.writerow(encodedOutputLine)
+        # --
 
-# ---
+    # end - while not eof
+
+    statistics_file.close()
+    # result_file.close() - can't on sys.stdout.
+
+# end - for statistics_name in ...
+
