@@ -53,13 +53,13 @@ my $ignored_resource_pattern = $cfg->param("ignored_resource_pattern") or die "n
 ### -- Prepare data structures
 
 my $memcached_server = new Cache::Memcached {
-            # Workaround.  TRA could not figure out how to get an array out of
-            # the configuration module.  So only one server supported for now.
-            # 'servers' => @memcached_servers,
-            'servers'                => [ $memcached_servers ],
-                'debug'              => 0,
-                'compress_threshold' => 10_000,
-        };
+        # Workaround.  TRA could not figure out how to get an array out of
+        # the configuration module.  So only one server supported for now.
+        # 'servers' => @memcached_servers,
+        'servers'                => [ $memcached_servers ],
+            'debug'              => 0,
+            'compress_threshold' => 10_000,
+    };
 
 my $json_parser = JSON->new->allow_nonref;
 
@@ -96,6 +96,10 @@ while (my $q = CGI::Fast->new) {
             my $remote_ip = $q->remote_addr();
 
             my $ticket_content = $memcached_server->get($ticket_id);
+
+            if (!defined $ticket_content) {
+                print STDERR "no ticket in $memcached_servers for id $ticket_id";
+            }
 
             $status = CheckTicket::logUsageStatisticsAndReturnStatusCodeFor($json_parser,
                 $ticket_content,
