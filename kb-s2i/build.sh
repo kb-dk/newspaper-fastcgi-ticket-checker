@@ -22,6 +22,7 @@ cp $S2I_SRC_ROOT/ocp-conf/* $HTTPD_CONFIGURATION_PATH/.
 CONTENT_BASE=$APP_BASE/content
 mkdir $CONTENT_BASE
 mkdir $CONTENT_BASE/{pdfs,jp2,tv-thumbnails}
+chmod -R g+w $CONTENT_BASE
 
 
 
