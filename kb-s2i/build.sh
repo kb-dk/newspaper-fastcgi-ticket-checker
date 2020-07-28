@@ -17,7 +17,7 @@ do
     ln -s $APP_BASE/conf/$CHECKER-check.ini $APP_BASE/fcgid-access-checker/.
 done
 
-cp $S2I_SCR_ROOT/ocp-conf/* $HTTPD_CONFIGURATION_PATH/.
+cp $S2I_SRC_ROOT/ocp-conf/* $HTTPD_CONFIGURATION_PATH/.
 
 CONTENT_BASE=$APP_BASE/content
 mkdir $CONTENT_BASE
