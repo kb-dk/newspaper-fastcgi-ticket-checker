@@ -1,4 +1,4 @@
-#!/usr/bin/env perl5
+#!/usr/bin/env perl
 
 package TestCheckTicket;
 
