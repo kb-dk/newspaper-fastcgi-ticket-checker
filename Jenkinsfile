@@ -60,6 +60,10 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
                             openshift.newApp("image-server:latest")
                             openshift.create("route", "edge", "--service=image-server")
                         }
+
+                        def applicationPod = openshift.selector("pod", [deployment : "image-server" ])
+                        openshift.raw("rsync test/tv-thumbnails ${applicationPod.name()}:/app/content/"
+
                     }
                 }
 
