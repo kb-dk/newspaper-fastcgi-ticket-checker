@@ -62,6 +62,13 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
                         }
 
                         def applicationPod = openshift.selector("pod", [deployment : "image-server" ])
+
+                        timeout(5) { 
+                            applicationPod.untilEach(1) {
+                                return (it.object().status.phase == "Running")
+                            }
+                        }
+
                         openshift.raw("rsync test/tv-thumbnails ${applicationPod.name()}:/app/content/")
 
                     }
