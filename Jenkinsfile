@@ -71,6 +71,8 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
 
                         openshift.raw("rsync --no-perms=true test/tv-thumbnails ${applicationPod.name()}:/app/content/")
 
+                        sh "test/SimpleIntegrationtest.sh"
+
                     }
                 }
 
