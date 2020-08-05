@@ -73,7 +73,7 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
                         echo "Id information of ssh user: ${sshid}"
                         def perms = openshift.raw("rsh ${applicationPod.name()} ls -la /app/content")
                         echo "Perm info for /app/content: ${perms}"
-                        openshift.raw("rsync test/tv-thumbnails ${applicationPod.name()}:/app/content/")
+                        openshift.raw("rsync --no-perms=true test/tv-thumbnails ${applicationPod.name()}:/app/content/")
 
                     }
                 }
