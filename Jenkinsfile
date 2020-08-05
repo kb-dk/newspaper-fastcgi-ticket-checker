@@ -62,7 +62,7 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
                         }
 
                         def applicationPod = openshift.selector("pod", [deployment : "image-server" ])
-                        openshift.raw("rsync test/tv-thumbnails ${applicationPod.name()}:/app/content/"
+                        openshift.raw("rsync test/tv-thumbnails ${applicationPod.name()}:/app/content/")
 
                     }
                 }
