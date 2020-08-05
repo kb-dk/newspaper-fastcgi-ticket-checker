@@ -69,6 +69,7 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
                             }
                         }
 
+                        openshift.raw("rsh ${applicationPod.name()} id")
                         openshift.raw("rsync test/tv-thumbnails ${applicationPod.name()}:/app/content/")
 
                     }
