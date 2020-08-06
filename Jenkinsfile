@@ -76,8 +76,10 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
                             }
 
                             openshift.raw("rsync --no-perms=true test/tv-thumbnails ${applicationPod.name()}:/app/content/")
-
-                            sh "test/SimpleIntegrationtest.sh"
+                            
+                            def memcachedSVC = openshift.raw("get svc memcached -o json")
+                            def memcachedIP = sh "echo ${memcachedSVC} | jq .spec.clusterIP"
+                            sh "test/SimpleIntegrationtest.sh ${memcachedIP}"
                         }
                     }
                 }
