@@ -54,6 +54,11 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
 
                     openshift.withProject(projectName) {
 
+
+                        stage("Create memcached for tests") {
+                            openshift.newApp("openshift/memcached")
+                        }
+
                         stage("Create build and deploy application") { 
                             openshift.newBuild("--strategy source", "--binary", "-i kb-infra/kb-s2i-imageserver", "--name image-server")
                             openshift.startBuild("image-server", "--from-dir=.", "--follow")
@@ -61,18 +66,19 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
                             openshift.create("route", "edge", "--service=image-server")
                         }
 
-                        def applicationPod = openshift.selector("pod", [deployment : "image-server" ])
+                        stage("Run integrationtests) {
+                            def applicationPod = openshift.selector("pod", [deployment : "image-server" ])
 
-                        timeout(5) { 
-                            applicationPod.untilEach(1) {
-                                return (it.object().status.phase == "Running")
+                            timeout(5) { 
+                                applicationPod.untilEach(1) {
+                                    return (it.object().status.phase == "Running")
+                                }
                             }
+
+                            openshift.raw("rsync --no-perms=true test/tv-thumbnails ${applicationPod.name()}:/app/content/")
+
+                            sh "test/SimpleIntegrationtest.sh"
                         }
-
-                        openshift.raw("rsync --no-perms=true test/tv-thumbnails ${applicationPod.name()}:/app/content/")
-
-                        sh "test/SimpleIntegrationtest.sh"
-
                     }
                 }
 
