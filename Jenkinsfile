@@ -80,7 +80,7 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
                             openshift.raw("rsync --no-perms=true test ${applicationPod.name()}:/tmp/") 
                             
                             sh 'env'
-                            openshift.raw("rsh ${applicationPod.name()} /tmp/test/addTestTickets.pl")    
+                            openshift.raw("rsh ${applicationPod.name()} /tmp/test/addTestTickets.pl ${env.JENKINS_JNLP_SERVICE_HOST}")    
                         }
                     }
                 }
