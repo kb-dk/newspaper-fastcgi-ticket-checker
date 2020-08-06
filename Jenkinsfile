@@ -66,7 +66,7 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
                             openshift.create("route", "edge", "--service=image-server")
                         }
 
-                        stage("Run integrationtests) {
+                        stage("Run integrationtests") {
                             def applicationPod = openshift.selector("pod", [deployment : "image-server" ])
 
                             timeout(5) { 
