@@ -16,6 +16,8 @@ if [ $HTTP_CODE != "200" ]
 then
     echo "Http response code was not 200, good case test failed"
     exit 1
+else
+    echo "Good case test passed"
 fi
 
 echo "Running bad case test"
@@ -30,6 +32,8 @@ if [ $HTTP_CODE != "401" ]
 then
     echo "Http response code was not 401, bad case test failed"
     exit 1
+else
+    echo "Bad case test passed"
 fi
 
 
