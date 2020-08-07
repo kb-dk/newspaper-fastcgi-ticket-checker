@@ -19,9 +19,9 @@ my $memcached_server = new Cache::Memcached {
 print "Host ip: $goodIP\n";
 
 # Ticket good for the test host
-my $goodTicket = '{"id":"3d2bda8b-8b7c-47e9-85ce-f42d2e4fc12d","type":"Stream","ipAddress":"' . $goodIP . '","resources":["uuid:371157ee-b120-4504-bfaf-364c15a4137c"],"userAttributes":{"everybody":["yes"],"SBIPRoleMapper":["inhouse"]},"properties":null}';
+my $goodTicket = '{"id":"3d2bda8b-8b7c-47e9-85ce-f42d2e4fc12d","type":"Download","ipAddress":"' . $goodIP . '","resources":["uuid:371157ee-b120-4504-bfaf-364c15a4137c"],"userAttributes":{"everybody":["yes"],"SBIPRoleMapper":["inhouse"]},"properties":null}';
 # Ticket that should not allow the test host access
-my $badTicket = '{"id":"3d2bda8b-8b7c-47e9-85ce-f42d2e4fcbad","type":"Stream","ipAddress":"' . $badIP . '","resources":["uuid:371157ee-b120-4504-bfaf-364c15a41bad"],"userAttributes":{"everybody":["yes"],"SBIPRoleMapper":["inhouse"]},"properties":null}';
+my $badTicket = '{"id":"3d2bda8b-8b7c-47e9-85ce-f42d2e4fcbad","type":"Download","ipAddress":"' . $badIP . '","resources":["uuid:371157ee-b120-4504-bfaf-364c15a41bad"],"userAttributes":{"everybody":["yes"],"SBIPRoleMapper":["inhouse"]},"properties":null}';
 
 
 $memcached_server->set("3d2bda8b-8b7c-47e9-85ce-f42d2e4fc12d", $goodTicket);
