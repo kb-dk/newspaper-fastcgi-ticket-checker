@@ -1,10 +1,18 @@
 #!/bin/bash
 
-MEMCACHED_IP=$1
-echo "memcached ip: $MEMCACHED_IP"
+PROJECT=$1
 
-printf 'set 3d2bda8b-8b7c-47e9-85ce-f42d2e4fc12d 0 60 234\r\n{"id":"3d2bda8b-8b7c-47e9-85ce-f42d2e4fc12d","type":"Stream","ipAddress":"172.18.98.246","resources":["uuid:371157ee-b120-4504-bfaf-364c15a4137c"],"userAttributes":{"everybody":["yes"],"SBIPRoleMapper":["inhouse"]},"properties":null}\r\n' | nc $MEMCACHED_IP 11211
+BASE_URL="http://image-server.$PROJECT..svc.cluster.local"
 
-printf "get 3d2bda8b-8b7c-47e9-85ce-f42d2e4fc12d" | nc $MEMCACHED_IP 11211
+
+HTTP_CODE=${curl -sS -w '{http_code}\n' -o /tmp/content $BASE_URL/tv-thumbnail/371157ee-b120-4504-bfaf-364c15a4137c?ticket=3d2bda8b-8b7c-47e9-85ce-f42d2e4fc12d}
+
+echo $HTTP_CODE
+
+if [ $HTTP_CODE -ne "200" ]
+then
+    echo "Http response code was not 200, good case test failed"
+    exit 1
+fi
 
 

@@ -85,7 +85,12 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
                             def memcachedIP =  memcachedPod.object().status.podIP
                             echo "memcached IP: ${memcachedIP}"
 
-                            openshift.raw("rsh ${applicationPod.name()} /tmp/test/addTestTickets.pl ${memcachedIP}")    
+                            openshift.raw("rsh ${applicationPod.name()} /tmp/test/addTestTickets.pl ${memcachedIP}")
+
+                            // Copy test files to memcached host, use that for running test
+                            openshift.raw("rsync --no-perms=true test ${memcachedPod.name()}:/tmp/")
+                            openshift.raw("rsh ${memcachedPod.name()} /tmp/test/SimpleIntegrationtest.sh ${projectName}")
+
 
                         }
                     }
