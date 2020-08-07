@@ -82,7 +82,7 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
                             sh 'env'
 
                             def memcachedPod = openshift.selector("pod", [deployment : "memcached" ])
-                            def memcachedIP memcachedPod.object().status.podIP
+                            def memcachedIP =  memcachedPod.object().status.podIP
                             echo "memcached IP: ${memcachedIP}"
 
                             openshift.raw("rsh ${applicationPod.name()} /tmp/test/addTestTickets.pl ${memcachedIP}")    
