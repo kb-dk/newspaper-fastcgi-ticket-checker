@@ -89,7 +89,9 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
 
                             // Copy test files to memcached host, use that for running test
                             openshift.raw("rsync --no-perms=true test ${memcachedPod.name()}:/tmp/")
-                            openshift.raw("rsh ${memcachedPod.name()} /tmp/test/SimpleIntegrationtest.sh ${projectName}")
+                            def testRun = openshift.raw("rsh ${memcachedPod.name()} /tmp/test/SimpleIntegrationtest.sh ${projectName}")
+
+                            echo ${testRun.out}
 
 
                         }
