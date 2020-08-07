@@ -81,6 +81,10 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
                             
                             sh 'env'
                             openshift.raw("rsh ${applicationPod.name()} /tmp/test/addTestTickets.pl ${env.JENKINS_JNLP_SERVICE_HOST}")    
+
+                            // Obtain route to deployed image-server for tests
+                            def route = openshift.selector("route", [app : "image-server"])
+                            echo "Route info: ${route}"
                         }
                     }
                 }
