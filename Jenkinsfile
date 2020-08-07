@@ -27,8 +27,6 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
                 //Do not use concurrent builds
                 properties([disableConcurrentBuilds()])
 
-//                def mvnCmd = "mvn -s /etc/m2/settings.xml --batch-mode"
-
                 stage('checkout') {
                     checkout scm
                 }
@@ -36,18 +34,6 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
                 stage('Unit test') {
                      sh "cd test && ./TestCheckTicket.pl"
                 }
-
-//                stage('Mvn clean package') {
-//                    sh "${mvnCmd} -DskipTests clean package"
-//                }
-
-//                stage('Analyze build results') {            
-//                    recordIssues aggregatingResults: true, 
-//                        tools: [java(), 
-//                                javaDoc(),
-//                                mavenConsole(),
-//                                taskScanner(highTags:'FIXME', normalTags:'TODO', includePattern: '**/*.java', excludePattern: 'target/**/*')]                
-//                }
 
                 stage('Create test project') {
                     recreateProject(projectName)
@@ -98,35 +84,26 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
                     }
                 }
 
-//                stage('Push to Nexus (if Master)') {
-//                    sh 'env'
-//                    echo "Branch name ${env.BRANCH_NAME}"
-//                    if (env.BRANCH_NAME == 'master') {
-//	                sh "${mvnCmd} clean deploy -DskipTests=true"
-//                    } else {
-//	                echo "Branch ${env.BRANCH_NAME} is not master, so no mvn deploy"
-//                    }
-//                }
 
-//                stage('Promote image') {
-//                    if (env.BRANCH_NAME == 'master') {
-//                        openshift.withCredentials( 'jenkins-image-promoter-secret' ) {
-//                            openshift.raw("registry login")
-//                            openshift.raw("image mirror default-route-openshift-image-registry.apps.ocp-devel.kb.dk/${projectName}/ticket-system-service:latest default-route-openshift-image-registry.apps.ocp-devel.kb.dk/medieplatform/ticket-system-service:latest")
-//                        }
-//                    } else {
-//                        echo "Branch ${env.BRANCH_NAME} is not master, so no mvn deploy"
-//                    }
-//                }
+                stage('Promote image') {
+                    if (env.BRANCH_NAME == 'master') {
+                        openshift.withCredentials( 'jenkins-image-promoter-secret' ) {
+                            openshift.raw("registry login")
+                            openshift.raw("image mirror default-route-openshift-image-registry.apps.ocp-devel.kb.dk/${projectName}/image-server:latest default-route-openshift-image-registry.apps.ocp-devel.kb.dk/medieplatform/image-server:latest")
+                        }
+                    } else {
+                        echo "Branch ${env.BRANCH_NAME} is not master, so no mvn deploy"
+                    }
+                }
 
-//                stage('Cleanup') {
-//                    try {
-//                        echo "Cleaning up test project"
-//                        openshift.selector("project/${projectName}").delete()
-//                    } catch (e) {
+                stage('Cleanup') {
+                    try {
+                        echo "Cleaning up test project"
+                        openshift.selector("project/${projectName}").delete()
+                    } catch (e) {
                          
-//                    }
-                //}
+                    }
+                }
             }
         } catch (e) {
             currentBuild.result = 'FAILURE'
