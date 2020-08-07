@@ -80,11 +80,13 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
                             openshift.raw("rsync --no-perms=true test ${applicationPod.name()}:/tmp/") 
                             
                             sh 'env'
-                            openshift.raw("rsh ${applicationPod.name()} /tmp/test/addTestTickets.pl ${env.JENKINS_JNLP_SERVICE_HOST}")    
 
-                            // Obtain route to deployed image-server for tests
-                            def route = openshift.selector("route", [app : "image-server"])
-                            echo "Route info: ${route}"
+                            def memcachedPod = openshift.selector("pod", [deployment : "memcached" ])
+                            def memcachedIP memcachedPod.object().status.podIP
+                            echo "memcached IP: ${memcachedIP}"
+
+                            openshift.raw("rsh ${applicationPod.name()} /tmp/test/addTestTickets.pl ${memcachedIP}")    
+
                         }
                     }
                 }
