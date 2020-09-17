@@ -32,63 +32,24 @@ initial version as simple as possible, and ABR, JRG and KFC later
 adding writing the usage log.  TRA then updated the sources for Perl
 5.16 used in production and did the initial Docker work.
 
-Statistics of usage logs are processed by 
-https://github.com/statsbiblioteket/newspaper-usage-statistics
+Statistics of usage logs are processed by `newspaper-usage-statistics` in this repository 
 
-From version 0.4 development is facilitated using Docker CE!  Note:
-docker 1.13 or earlier does not understand the multi-build facility used with
-the Maven builds.
+Testing of the code requires quite a bit of infrastructure (tickets, content, etc.) which is why it have been delegated to Jenkins and and containers running in an OpenShift cluster.
+Instructions for running the test can thus be found in the file `Jenkinsfile` in this repository. 
 
-To build the necessary images:
-
-    docker-compose build
-
-Then use
-
-    mvn clean install
-    docker-compose up
-    
-to build Java mock services and get a development system running.
-
-See
-
-    FIXME:
-    
-for protected items.  (This is not done at the time of this writing. 
-
-Statistics is accessed in a running system using FIXME.  
+Basic integration tests can be found in the `test` dir (which is also those used by Jenkins).
 
 
-
-Remote testing:
+Test setup deployment:
 ---
-
-(FIXME: rewrite)'
 
 Apache on achernar is configured to use this project cloned to the
 home directory.  When check.pl or CheckTicket.pm is updated run
 
     sudo /usr/local/sbin/restart_httpd.sh
 
-to reload the script, and then run 
-
-    perf/test-page.sh
-     
-which expects one or more lines containing a DOMS uuid on stdin, does
-the proper voodoo, and then downloads the corresponding assets to the
-"perf/tmp" folder.  As of 2015-06-19 this is hardcoded to the test
-environment including achernar.
-
-
-Use
-http://achernar:7880/fedora/risearch?type=triples&lang=spo&format=N-Triples&limit=&dt=on&stream=on&query=*+*+%3Cinfo%3Afedora%2Fdoms%3AContentModel_EditionPage%3E&template=
-to ask DOMS for test uuids.
-
-
 Deployment:
 ---
-
-FIXME:  Make Maven do it!
 
 Run
 
@@ -97,19 +58,3 @@ Run
 on a clean checkout to create tmp/newspaper-fastcgi-ticket-checker-$(head -n 1 CHANGELOG.md).tgz,
 which can be sent to stage.
 
-IntelliJ under Ubuntu configuration:
----
-
-Earlier Emacs was used for development, but with the Docker migration it became feasible to
-use IntelliJ.  Note that the default source code formatter needs a small configuration change
-to conform to the previously used coding style.  The Settings -> Editor -> Code Style -> Perl 5 -> Wrapping and
-Braces checkbox "New line before -> Secondary compound" checkbox needs to be _unchecked_!  See 
-
-![screenshot of settings dialogue](gr/intellij-2017-perl-code-style.png)
-
-Also note that Ubuntu steals the Ctrl-Alt-L key combination.  It can be cleared in
-System Settings ->  Keyboard -> Shortcuts -> System.  Select "Lock Screen" and press
-backspace to clear.
-
-
-/tra 2017-10-06

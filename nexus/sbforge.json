@@ -1,5 +1,0 @@
-{
-  "name": "sbforge",
-  "type": "groovy",
-  "content": "repository.createMavenProxy('sbforge', 'https://sbforge.org/nexus/content/repositories/releases/')"
-}
