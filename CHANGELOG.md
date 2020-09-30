@@ -1,3 +1,11 @@
+0.5
+===
+
+*Unreleased*
+Change the way the project is tested, from docker-compose to rely on OpenShift. 
+Drop now unneeded mock services
+Add checker for tv-thumbnails, to replace the use of [http-ticket-checker](https://github.com/kb-dk/http-ticket-checker)
+
 0.4
 ===
 
