@@ -87,9 +87,9 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
 
                 stage('Promote image') {
                     if (env.BRANCH_NAME == 'master') {
-                        openshift.withCredentials( 'jenkins-image-promoter-secret' ) {
-                            openshift.raw("registry login")
-                            openshift.raw("image mirror default-route-openshift-image-registry.apps.ocp-devel.kb.dk/${projectName}/image-server:latest default-route-openshift-image-registry.apps.ocp-devel.kb.dk/medieplatform/image-server:latest")
+                        configFileProvider([configFile(fileId: "imagePromoter", variable: 'promoter')]) {
+                            def promoter = load promoter
+                            promoter.promoteImage("image-server", "${projectName}",  "medieplatform", "latest")
                         }
                     } else {
                         echo "Branch ${env.BRANCH_NAME} is not master, so no mvn deploy"
