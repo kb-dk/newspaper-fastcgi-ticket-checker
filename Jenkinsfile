@@ -10,8 +10,6 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
     podTemplate(
             inheritFrom: 'kb-jenkins-agent-perl',
             cloud: 'openshift', //cloud must be openshift
-            label: 'perl-agent-with-settings.xml',
-            name: 'perl-agent-with-settings.xml',
             volumes: [ //mount the settings.xml
                        secretVolume(mountPath: '/etc/m2', secretName: 'maven-settings')
             ]) {
@@ -22,8 +20,7 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
         echo "name=${projectName}"
 
         try {
-            //GO to a node with maven and settings.xml
-            node('perl-agent-with-settings.xml') {
+            node(POD_LABEL) {
                 //Do not use concurrent builds
                 properties([disableConcurrentBuilds()])
 
