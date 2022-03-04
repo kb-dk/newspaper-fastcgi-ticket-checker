@@ -10,6 +10,9 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
     podTemplate(
             inheritFrom: 'kb-jenkins-agent-perl',
             cloud: 'openshift', //cloud must be openshift
+            envVars: [ //This fixes the error with en_US.utf8 not being found
+                    envVar(key:"LC_ALL", value:"C.utf8")
+            ],
             volumes: [ //mount the settings.xml
                        secretVolume(mountPath: '/etc/m2', secretName: 'maven-settings')
             ]) {
