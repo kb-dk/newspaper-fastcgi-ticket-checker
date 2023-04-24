@@ -48,7 +48,7 @@ openshift.withCluster() { // Use "default" cluster or fallback to OpenShift clus
                         stage("Create build and deploy application") { 
                             openshift.newBuild("--strategy source", "--binary", "-i kb-infra/kb-s2i-imageserver", "--name image-server")
                             openshift.startBuild("image-server", "--from-dir=.", "--follow")
-                            openshift.newApp("image-server:latest")
+                            openshift.newApp("image-server", "-e BUILD_NUMBER=latest")
                             openshift.create("route", "edge", "--service=image-server")
                         }
 
