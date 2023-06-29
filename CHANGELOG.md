@@ -1,3 +1,11 @@
+0.6 (2023-06-29)
+===
+
+*Unreleased*
+Add support for Preservica resource IDs, which are just raw UUIDs in standard hex representation, without any pre- or post-fix
+Add check for successful regexp matching in CheckTIcket.pmas the result $1 is set previously in check.pl and non-matching keeps the old $1 value. This previously caused successful checks for invalid IDs
+
+
 0.5
 ===
 
