@@ -128,8 +128,8 @@ sub logUsageStatisticsAndReturnStatusCodeFor {
 
         # Fail if the requested resource uuid is not one of the
         # resources described in the ticket.
-        # doms_radioTVCollection:uuid:853a0b31-c944-44a5-8e42-bc9b5bc697be
-
+        # DOMS record ID:         doms_radioTVCollection:uuid:853a0b31-c944-44a5-8e42-bc9b5bc697be
+        # Preservica resource ID: 1bee2176-9f62-4f66-9854-ee0e61724359
         my $found = $FALSE;
 
         # (Note: Array regexp requires perl 5.10 and is experimental,
@@ -137,7 +137,7 @@ sub logUsageStatisticsAndReturnStatusCodeFor {
 
         for my $resource (@resources) {
             # http://stackoverflow.com/a/6640851/53897
-            $resource =~ m/uuid:([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/;
+            $resource =~ m/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/;
             if ($1 eq $requested_resource) {
                 $found = $TRUE;
                 last;
