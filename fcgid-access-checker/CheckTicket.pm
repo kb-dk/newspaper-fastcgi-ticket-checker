@@ -137,10 +137,11 @@ sub logUsageStatisticsAndReturnStatusCodeFor {
 
         for my $resource (@resources) {
             # http://stackoverflow.com/a/6640851/53897
-            $resource =~ m/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/;
-            if ($1 eq $requested_resource) {
-                $found = $TRUE;
-                last;
+            if ( $resource =~ m/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/ ) {
+                if ($1 eq $requested_resource) {
+                    $found = $TRUE;
+                    last;
+                }
             }
         }
         if ($found == $FALSE) {
